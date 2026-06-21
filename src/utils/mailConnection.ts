@@ -21,14 +21,24 @@ const providerConfig = {
   },
 };
 
-function getProviderToken(session: Session | null) {
-  if (!session?.provider_token) {
+async function getSessionWithProviderToken(session: Session | null) {
+  if (session?.provider_token) {
+    return session;
+  }
+
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data.session?.provider_token) {
     throw new Error(
-      "Mail erisim tokeni bulunamadi. Supabase provider ayarlarinda gerekli OAuth scope'larini acman gerekiyor."
+      "Mail erisim tokeni bulunamadi. Google/Microsoft izin ekranini tekrar tamamlayip yeniden dene."
     );
   }
 
-  return session.provider_token;
+  return data.session;
 }
 
 async function readJsonResponse(response: Response) {
@@ -171,8 +181,9 @@ export async function analyzeLinkedMailbox(
   session: Session | null,
   provider: EmailProvider
 ): Promise<EmailAnalysisResponse> {
-  const accessToken = getProviderToken(session);
-  const email = session?.user?.email;
+  const activeSession = await getSessionWithProviderToken(session);
+  const accessToken = activeSession.provider_token;
+  const email = activeSession.user?.email;
 
   if (!email) {
     throw new Error("Kullanici e-postasi bulunamadi.");

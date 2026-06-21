@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import { getPendingMailProvider } from "@/utils/mailConnection";
 
 export default function MailCallback() {
@@ -20,14 +21,43 @@ export default function MailCallback() {
       return;
     }
 
-    if (!session) {
-      navigate("/auth", { replace: true });
+    if (session) {
+      navigate(`/abonelik/yeni?mail_connected=1&provider=${provider}`, {
+        replace: true,
+      });
       return;
     }
 
-    navigate(`/abonelik/yeni?mail_connected=1&provider=${provider}`, {
-      replace: true,
-    });
+    let isCancelled = false;
+
+    const waitForSession = async () => {
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        const { data } = await supabase.auth.getSession();
+
+        if (isCancelled) {
+          return;
+        }
+
+        if (data.session) {
+          navigate(`/abonelik/yeni?mail_connected=1&provider=${provider}`, {
+            replace: true,
+          });
+          return;
+        }
+
+        await new Promise((resolve) => window.setTimeout(resolve, 300));
+      }
+
+      if (!isCancelled) {
+        navigate("/auth", { replace: true });
+      }
+    };
+
+    void waitForSession();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [isLoading, navigate, session]);
 
   return (
