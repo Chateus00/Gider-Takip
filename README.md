@@ -1,57 +1,59 @@
-# React + TypeScript + Vite
+# Gider Takip
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mail analizi odakli abonelik takip uygulamasi.
 
-Currently, two official plugins are available:
+## Yerel Calistirma
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm.cmd install
+npm.cmd run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Uygulama varsayilan olarak `http://localhost:5173` adresinde acilir.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Ortam Degiskenleri
 
-export default tseslint.config({
-  extends: [
-    // other configs...
-    // Enable lint rules for React
-    reactX.configs['recommended-typescript'],
-    // Enable lint rules for React DOM
-    reactDom.configs.recommended,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+`.env.local` icine su alanlari ekleyebilirsin:
+
+```env
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_API_BASE_URL=https://your-render-service.onrender.com
 ```
+
+Notlar:
+
+- Yerelde `VITE_API_BASE_URL` bos birakilabilir. Bu durumda Vite proxy ile `http://localhost:3001` kullanilir.
+- `VITE_API_BASE_URL` doluysa frontend API isteklerini dogrudan o adrese yollar.
+
+## Vercel + Render Deploy
+
+### Vercel
+
+- Repo'yu Vercel'e import et
+- Build command: `npm run build`
+- Output directory: `dist`
+- Environment variables:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_ANON_KEY`
+  - `VITE_API_BASE_URL` = Render servis URL'in
+
+### Render
+
+- Repo'yu Render'a bagla
+- `render.yaml` dosyasi otomatik ayari yapar
+- Elle girmen gerekirse:
+  - Build Command: `npm install`
+  - Start Command: `npm run server:start`
+- Environment variables:
+  - `CORS_ORIGIN` = Vercel domain'in
+  - `AI_API_KEY` = opsiyonel
+
+## OAuth Guncellemesi
+
+Canliya ciktiktan sonra su yerleri yeni domain ile guncelle:
+
+- Supabase `Site URL`
+- Supabase `Redirect URLs`
+- Google OAuth `Authorized JavaScript origins`
+- Google OAuth `Test users` veya publish ayarlari
