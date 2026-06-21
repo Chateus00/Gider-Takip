@@ -195,6 +195,27 @@ export default function SubscriptionForm() {
   }
 
   useEffect(() => {
+    const callbackError = searchParams.get("mail_error");
+    const callbackErrorDescription = searchParams.get("mail_error_description");
+
+    if (!callbackError) {
+      return;
+    }
+
+    if (callbackError === "identity_already_exists") {
+      setError(
+        "Bu mail hesabi zaten bagli gorunuyor. Ayni saglayici zaten bagliysa yeniden baglamak yerine sadece tarama baslatilabilir."
+      );
+    } else {
+      setError(callbackErrorDescription ?? "Mail baglantisi tamamlanamadi.");
+    }
+
+    clearPendingMailProvider();
+    setStatusMessage("");
+    navigate("/abonelik/yeni", { replace: true });
+  }, [navigate, searchParams]);
+
+  useEffect(() => {
     const isConnected = searchParams.get("mail_connected") === "1";
     const callbackProvider = searchParams.get("provider");
 

@@ -21,6 +21,10 @@ const providerConfig = {
   },
 };
 
+function hasLinkedIdentity(session: Session | null, provider: "google" | "azure") {
+  return session?.user?.identities?.some((identity) => identity.provider === provider) ?? false;
+}
+
 async function getSessionWithProviderToken(session: Session | null) {
   if (session?.provider_token) {
     return session;
@@ -162,14 +166,33 @@ export function clearPendingMailProvider() {
 export async function startMailProviderLink(provider: EmailProvider) {
   rememberPendingMailProvider(provider);
 
-  const { error } = await supabase.auth.linkIdentity({
-    provider: providerConfig[provider].oauthProvider,
-    options: {
-      redirectTo: `${window.location.origin}/mail/callback`,
-      scopes: providerConfig[provider].scopes,
-      queryParams: providerConfig[provider].queryParams,
-    },
-  });
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError) {
+    clearPendingMailProvider();
+    throw sessionError;
+  }
+
+  const config = providerConfig[provider];
+  const authPromise = hasLinkedIdentity(sessionData.session, config.oauthProvider)
+    ? supabase.auth.signInWithOAuth({
+        provider: config.oauthProvider,
+        options: {
+          redirectTo: `${window.location.origin}/mail/callback`,
+          scopes: config.scopes,
+          queryParams: config.queryParams,
+        },
+      })
+    : supabase.auth.linkIdentity({
+        provider: config.oauthProvider,
+        options: {
+          redirectTo: `${window.location.origin}/mail/callback`,
+          scopes: config.scopes,
+          queryParams: config.queryParams,
+        },
+      });
+
+  const { error } = await authPromise;
 
   if (error) {
     clearPendingMailProvider();
