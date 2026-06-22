@@ -5,7 +5,9 @@ import Auth from "@/pages/Auth";
 import Home from "@/pages/Home";
 import MailCallback from "@/pages/MailCallback";
 import NewSubscription from "@/pages/NewSubscription";
+import Privacy from "@/pages/Privacy";
 import SubscriptionDetail from "@/pages/SubscriptionDetail";
+import Terms from "@/pages/Terms";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -109,6 +111,8 @@ function AppShell() {
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/mail/callback" element={<MailCallback />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route
               path="/"
               element={
@@ -136,6 +140,20 @@ function AppShell() {
             <Route path="*" element={<Navigate to={session ? "/" : "/auth"} replace />} />
           </Routes>
         </main>
+
+        <footer className="border-t border-white/60 px-2 py-6 text-sm text-slate-500">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <p>Gider Takip, kullanici hesaplari ve mail baglama ozelligi icin gerekli verileri isler.</p>
+            <div className="flex flex-wrap items-center gap-4">
+              <NavLink to="/privacy" className="transition hover:text-slate-950">
+                Gizlilik politikasi
+              </NavLink>
+              <NavLink to="/terms" className="transition hover:text-slate-950">
+                Kullanim kosullari
+              </NavLink>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
