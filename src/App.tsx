@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter as Router, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { LayoutDashboard, LockKeyhole, LogOut, Mail, Plus, UserCircle2 } from "lucide-react";
 import Auth from "@/pages/Auth";
+import About from "@/pages/About";
 import Home from "@/pages/Home";
 import MailCallback from "@/pages/MailCallback";
 import NewSubscription from "@/pages/NewSubscription";
@@ -109,6 +110,7 @@ function AppShell() {
 
         <main className="flex-1 pb-10">
           <Routes>
+            <Route path="/hakkinda" element={<About />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/mail/callback" element={<MailCallback />} />
             <Route path="/privacy" element={<Privacy />} />
@@ -145,6 +147,9 @@ function AppShell() {
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p>Gider Takip, kullanici hesaplari ve mail baglama ozelligi icin gerekli verileri isler.</p>
             <div className="flex flex-wrap items-center gap-4">
+              <NavLink to="/hakkinda" className="transition hover:text-slate-950">
+                Uygulama hakkinda
+              </NavLink>
               <NavLink to="/privacy" className="transition hover:text-slate-950">
                 Gizlilik politikasi
               </NavLink>
