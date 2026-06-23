@@ -24,18 +24,18 @@ export default function ForecastPanel({ data }: ForecastPanelProps) {
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-[24px] bg-slate-950 p-5 text-white">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{t("forecast.currentAmount")}</p>
-          <p className="mt-2 text-3xl font-semibold">
+        <div className="rounded-[24px] border border-amber-100 bg-[#f7eddc] p-5 text-slate-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{t("forecast.currentAmount")}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">
             {formatCurrency(data.currentAmount, data.currency)}
           </p>
-          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-slate-400">{t("forecast.nextKnownPayment")}</p>
-          <p className="mt-2 text-xl font-medium text-teal-200">
+          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-slate-500">{t("forecast.nextKnownPayment")}</p>
+          <p className="mt-2 text-xl font-medium text-teal-700">
             {data.officialNextAmount
               ? formatCurrency(data.officialNextAmount, data.currency)
               : t("common.noOfficialData")}
           </p>
-          <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-slate-100">
+          <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#efe1c6] px-3 py-1.5 text-sm text-slate-700">
             <TrendingUp className="h-4 w-4" />
             {t("forecast.expectedIncrease", { value: formatPercent(data.predictedIncreaseRate) })}
           </p>
