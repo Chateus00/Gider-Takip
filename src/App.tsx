@@ -27,9 +27,9 @@ function AppShell() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(45,212,191,0.16),_transparent_30%),linear-gradient(180deg,_#f8fafc_0%,_#ecfeff_100%)]">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(74,222,128,0.18),_transparent_30%),linear-gradient(180deg,_#f7fee7_0%,_#ecfdf5_100%)]">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 md:px-6 lg:px-8">
-        <header className="mb-8 flex flex-col gap-4 rounded-[32px] border border-white/60 bg-white/70 px-5 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:flex-row md:items-center md:justify-between">
+        <header className="mb-8 flex flex-col gap-4 rounded-[32px] border border-emerald-100 bg-white/80 px-5 py-4 shadow-[0_20px_60px_rgba(6,78,59,0.10)] backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Abonelik takip uygulaması</p>
             <h1 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">Gider Takip</h1>
@@ -43,7 +43,7 @@ function AppShell() {
                   end
                   className={({ isActive }) =>
                     `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-                      isActive ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      isActive ? "bg-emerald-700 text-white" : "bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
                     }`
                   }
                 >
@@ -54,7 +54,7 @@ function AppShell() {
                   to="/abonelik/yeni"
                   className={({ isActive }) =>
                     `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-                      isActive ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      isActive ? "bg-emerald-700 text-white" : "bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
                     }`
                   }
                 >
@@ -67,7 +67,7 @@ function AppShell() {
                 to="/auth"
                 className={({ isActive }) =>
                   `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-                    isActive ? "bg-slate-950 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    isActive ? "bg-emerald-700 text-white" : "bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
                   }`
                 }
               >
@@ -92,16 +92,16 @@ function AppShell() {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-slate-950 hover:text-slate-950"
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-emerald-700 hover:text-emerald-800"
                 >
                   <LogOut className="h-4 w-4" />
                   Çıkış yap
                 </button>
               </div>
             ) : (
-              <div className="inline-flex items-center gap-3 rounded-full bg-amber-50 px-4 py-2 text-sm text-amber-700">
+              <div className="inline-flex items-center gap-3 rounded-full bg-emerald-50 px-4 py-2 text-sm text-emerald-700">
                 <LockKeyhole className="h-4 w-4" />
-                Supabase ile e-posta girişi hazır
+                Hesabınla giriş yap
               </div>
             )}
             {signOutError ? <p className="text-sm text-rose-600">{signOutError}</p> : null}
@@ -143,7 +143,7 @@ function AppShell() {
           </Routes>
         </main>
 
-        <footer className="border-t border-white/60 px-2 py-6 text-sm text-slate-500">
+        <footer className="border-t border-emerald-100 px-2 py-6 text-sm text-slate-500">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p>Gider Takip, kullanıcı hesapları ve mail bağlama özelliği için gerekli verileri işler.</p>
             <div className="flex flex-wrap items-center gap-4">

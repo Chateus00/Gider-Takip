@@ -36,11 +36,11 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
   ];
 
   return (
-    <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-slate-950 px-6 py-8 shadow-[0_30px_90px_rgba(15,23,42,0.45)] md:px-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(45,212,191,0.22),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(34,197,94,0.18),_transparent_35%)]" />
+    <section className="relative overflow-hidden rounded-[32px] border border-emerald-900/20 bg-[linear-gradient(180deg,#052e16_0%,#064e3b_100%)] px-6 py-8 shadow-[0_30px_90px_rgba(6,78,59,0.30)] md:px-8">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(167,243,208,0.18),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(74,222,128,0.18),_transparent_35%)]" />
       <div className="relative grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
         <div className="space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-teal-200">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-emerald-200">
             <Sparkles className="h-3.5 w-3.5" />
             Gider Takip
           </div>
@@ -55,7 +55,7 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
           <div className="flex flex-wrap gap-3">
             <a
               href="/abonelik/yeni"
-              className="inline-flex items-center gap-2 rounded-full bg-teal-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-teal-200"
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-300 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-200"
             >
               Mail hesabını bağla
               <ArrowUpRight className="h-4 w-4" />
@@ -72,7 +72,7 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
               key={label}
               className="rounded-[24px] border border-white/10 bg-white/5 p-4 backdrop-blur"
             >
-              <div className="mb-4 inline-flex rounded-2xl bg-white/10 p-2 text-teal-200">
+              <div className="mb-4 inline-flex rounded-2xl bg-white/10 p-2 text-emerald-200">
                 <Icon className="h-4 w-4" />
               </div>
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{label}</p>

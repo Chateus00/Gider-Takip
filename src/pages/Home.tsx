@@ -76,7 +76,7 @@ export default function Home() {
 
       <section className="space-y-5">
         <div className="space-y-6">
-          <section className="rounded-[32px] border border-slate-200/70 bg-white/85 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail analizi</p>
@@ -89,7 +89,7 @@ export default function Home() {
               </div>
               <Link
                 to="/abonelik/yeni"
-                className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
               >
                 <Mail className="h-4 w-4" />
                 Mail hesabını bağla
@@ -97,11 +97,11 @@ export default function Home() {
             </div>
 
             {dashboard.connection ? (
-              <div className="mt-5 rounded-[24px] bg-slate-50 px-4 py-4 text-sm text-slate-600">
+              <div className="mt-5 rounded-[24px] bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
                 Bağlı hesap: <span className="font-medium text-slate-900">{dashboard.connection.email}</span>
               </div>
             ) : (
-              <div className="mt-5 rounded-[24px] border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-sm leading-6 text-slate-500">
+              <div className="mt-5 rounded-[24px] border border-dashed border-emerald-100 bg-emerald-50/60 px-4 py-5 text-sm leading-6 text-slate-600">
                 Henüz bağlı bir mail hesabı yok.
               </div>
             )}
@@ -124,8 +124,8 @@ export default function Home() {
                         onClick={() => setSelectedFilter(filter.key)}
                         className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
                           selectedFilter === filter.key
-                            ? "bg-slate-950 text-white"
-                            : "border border-slate-200 bg-white text-slate-600 hover:border-slate-900 hover:text-slate-950"
+                            ? "bg-emerald-700 text-white"
+                            : "border border-emerald-100 bg-white text-slate-600 hover:border-emerald-700 hover:text-emerald-800"
                         }`}
                       >
                         {selectedFilter === filter.key ? (
@@ -147,7 +147,7 @@ export default function Home() {
               </section>
             </>
           ) : (
-            <section className="rounded-[32px] border border-slate-200/70 bg-white/85 p-6 text-slate-500 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+            <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 text-slate-500 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
               Henüz abonelik bulunmadı. Mail taraması yaptıktan sonra burada görünecek.
             </section>
           )}

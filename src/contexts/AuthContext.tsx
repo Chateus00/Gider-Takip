@@ -15,6 +15,7 @@ interface AuthContextValue {
   isLoading: boolean;
   signUp: (email: string, password: string) => Promise<string>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: (redirectPath?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -75,6 +76,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
+        });
+
+        if (error) {
+          throw error;
+        }
+      },
+      async signInWithGoogle(redirectPath = "/") {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}${redirectPath}`,
+          },
         });
 
         if (error) {
