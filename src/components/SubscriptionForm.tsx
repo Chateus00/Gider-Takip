@@ -19,6 +19,8 @@ import { formatCurrency, formatDate } from "@/utils/formatters";
 import {
   analyzeLinkedMailbox,
   clearPendingMailProvider,
+  getStoredConnectedMailAccounts,
+  storeConnectedMailAccount,
   startMailProviderLink,
 } from "@/utils/mailConnection";
 
@@ -47,6 +49,7 @@ export default function SubscriptionForm() {
   const [importedMap, setImportedMap] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const [connectedAccounts, setConnectedAccounts] = useState(() => getStoredConnectedMailAccounts());
   const hasHandledCallback = useRef(false);
 
   function toFriendlyError(connectError: unknown) {
@@ -77,10 +80,11 @@ export default function SubscriptionForm() {
 
     try {
       const response = await analyzeLinkedMailbox(session, providerToScan);
-      await connectEmail({
+      const savedConnection = await connectEmail({
         provider: response.connection.provider,
         email: response.connection.email,
       });
+      setConnectedAccounts(storeConnectedMailAccount(savedConnection.connection));
       setAnalysis(response);
       setStatusMessage(response.summary);
     } catch (analysisError) {
@@ -321,10 +325,38 @@ export default function SubscriptionForm() {
                   ? "E-postalar taranıyor"
                   : analysis
                     ? "Onay aşaması"
-                    : "Bağlantı bekleniyor"}
+                    : connectedAccounts.length
+                      ? `${connectedAccounts.length} hesap bağlı`
+                      : "Bağlantı bekleniyor"}
             </p>
           </div>
         </div>
+
+        {connectedAccounts.length ? (
+          <div className="mt-6 rounded-[24px] border border-emerald-100 bg-emerald-50/70 p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Bağlı mail hesapları</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  İstersen yeni bir hesabı daha bağlayabilir veya bağlı hesaplardan birini tekrar tarayabilirsin.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-800">
+                {connectedAccounts.length} hesap
+              </span>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {connectedAccounts.map((account) => (
+                <span
+                  key={`${account.provider}-${account.email}`}
+                  className="rounded-full border border-emerald-100 bg-white px-3 py-2 text-sm text-slate-700"
+                >
+                  {account.email} · {providerText[account.provider].label}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {(["gmail", "outlook"] as EmailProvider[]).map((option) => (
@@ -361,7 +393,7 @@ export default function SubscriptionForm() {
                     </>
                   ) : (
                     <>
-                      {providerText[option].button}
+                      {connectedAccounts.length ? "Bir hesap daha bağla" : providerText[option].button}
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}

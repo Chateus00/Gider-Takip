@@ -78,7 +78,7 @@ export interface EmailConnection {
 
 export interface DashboardResponse {
   summary: DashboardSummary;
-  connection: EmailConnection | null;
+  connections: EmailConnection[];
   trackingMethods: IntakeMethod[];
   items: SubscriptionItem[];
 }

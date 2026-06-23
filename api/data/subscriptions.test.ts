@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   connectEmailAccount,
   createSubscription,
+  getDashboardData,
   getDiscoverItems,
   simulateIntake,
 } from "./subscriptions";
@@ -23,6 +24,23 @@ describe("intake simulations", () => {
 
     expect(result.connection.email).toBe("demo@example.com");
     expect(result.preview.length).toBeGreaterThan(0);
+  });
+
+  it("stores multiple connected mail accounts on the dashboard", () => {
+    connectEmailAccount({
+      provider: "gmail",
+      email: "first@example.com",
+    });
+    connectEmailAccount({
+      provider: "outlook",
+      email: "second@example.com",
+    });
+
+    const dashboard = getDashboardData();
+
+    expect(dashboard.connections.length).toBeGreaterThanOrEqual(2);
+    expect(dashboard.connections.some((item) => item.email === "first@example.com")).toBe(true);
+    expect(dashboard.connections.some((item) => item.email === "second@example.com")).toBe(true);
   });
 
   it("preserves detection metadata on created subscriptions", () => {

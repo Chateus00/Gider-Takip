@@ -1,9 +1,10 @@
 import type { Session } from "@supabase/supabase-js";
-import type { EmailAnalysisResponse, EmailProvider } from "../../shared/subscriptions";
+import type { EmailAnalysisResponse, EmailConnection, EmailProvider } from "../../shared/subscriptions";
 import { supabase } from "@/lib/supabase";
 import { extractSubscriptionsFromMessages, type MailMessageCandidate } from "@/utils/mailAnalysis";
 
 const pendingProviderStorageKey = "gider-takip.pending-mail-provider";
+const connectedAccountsStorageKey = "gider-takip.connected-mail-accounts";
 
 const providerConfig = {
   gmail: {
@@ -161,6 +162,37 @@ export function getPendingMailProvider(): EmailProvider | null {
 
 export function clearPendingMailProvider() {
   window.sessionStorage.removeItem(pendingProviderStorageKey);
+}
+
+export function getStoredConnectedMailAccounts() {
+  try {
+    const rawValue = window.localStorage.getItem(connectedAccountsStorageKey);
+
+    if (!rawValue) {
+      return [] as EmailConnection[];
+    }
+
+    const parsed = JSON.parse(rawValue) as EmailConnection[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [] as EmailConnection[];
+  }
+}
+
+export function storeConnectedMailAccount(connection: EmailConnection) {
+  const currentConnections = getStoredConnectedMailAccounts();
+  const existingIndex = currentConnections.findIndex(
+    (item) => item.provider === connection.provider && item.email.toLowerCase() === connection.email.toLowerCase()
+  );
+
+  if (existingIndex >= 0) {
+    currentConnections[existingIndex] = connection;
+  } else {
+    currentConnections.unshift(connection);
+  }
+
+  window.localStorage.setItem(connectedAccountsStorageKey, JSON.stringify(currentConnections));
+  return currentConnections;
 }
 
 export async function startMailProviderLink(provider: EmailProvider) {

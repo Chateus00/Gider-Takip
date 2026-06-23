@@ -69,6 +69,7 @@ export default function Home() {
     { key: "watch", label: "Yakında zam" },
     { key: "yearly", label: "Yıllık" },
   ];
+  const hasConnectedMail = dashboard.connections.length > 0;
 
   return (
     <div className="space-y-8">
@@ -76,36 +77,32 @@ export default function Home() {
 
       <section className="space-y-5">
         <div className="space-y-6">
-          <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail analizi</p>
-                <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
-                  Aboneliklerin burada görünür
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                  Mail hesabını bağlayıp taramayı başlattığında, bulduklarını onaylayıp listeye ekleyebilirsin.
-                </p>
+          {!hasConnectedMail ? (
+            <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail analizi</p>
+                  <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
+                    Aboneliklerin burada görünür
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                    İlk mail hesabını bağlayıp taramayı başlattığında, bulduklarını onaylayıp listeye ekleyebilirsin.
+                  </p>
+                </div>
+                <Link
+                  to="/abonelik/yeni"
+                  className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
+                >
+                  <Mail className="h-4 w-4" />
+                  Mail hesabını bağla
+                </Link>
               </div>
-              <Link
-                to="/abonelik/yeni"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
-              >
-                <Mail className="h-4 w-4" />
-                Mail hesabını bağla
-              </Link>
-            </div>
 
-            {dashboard.connection ? (
-              <div className="mt-5 rounded-[24px] bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
-                Bağlı hesap: <span className="font-medium text-slate-900">{dashboard.connection.email}</span>
-              </div>
-            ) : (
               <div className="mt-5 rounded-[24px] border border-dashed border-emerald-100 bg-emerald-50/60 px-4 py-5 text-sm leading-6 text-slate-600">
                 Henüz bağlı bir mail hesabı yok.
               </div>
-            )}
-          </section>
+            </section>
+          ) : null}
 
           {dashboard.items.length > 0 ? (
             <>

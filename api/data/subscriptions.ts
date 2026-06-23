@@ -52,7 +52,7 @@ const trackingMethods: IntakeMethod[] = [
   },
 ];
 
-let emailConnection: EmailConnection | null = null;
+let emailConnections: EmailConnection[] = [];
 const mySubscriptions: SubscriptionItem[] = [];
 
 const detectedEmailSubscriptions: IntakePreviewItem[] = [
@@ -245,7 +245,7 @@ function createPredictedAmounts(amount: number) {
 export function getDashboardData(): DashboardResponse {
   return {
     summary: buildSummary(mySubscriptions),
-    connection: emailConnection,
+    connections: emailConnections,
     trackingMethods,
     items: mySubscriptions,
   };
@@ -282,15 +282,33 @@ export function getPredictionById(id: string): PredictionResponse | undefined {
 
 export function connectEmailAccount(input: EmailConnectInput): EmailAnalysisResponse {
   const now = new Date().toISOString();
-  emailConnection = {
+  const nextConnection: EmailConnection = {
     provider: input.provider,
     email: input.email,
     connectedAt: now,
     lastScanAt: now,
   };
 
+  const existingIndex = emailConnections.findIndex(
+    (connection) => connection.provider === input.provider && connection.email.toLowerCase() === input.email.toLowerCase()
+  );
+
+  if (existingIndex >= 0) {
+    emailConnections[existingIndex] = {
+      ...emailConnections[existingIndex],
+      lastScanAt: now,
+    };
+  } else {
+    emailConnections = [nextConnection, ...emailConnections];
+  }
+
+  const activeConnection =
+    emailConnections.find(
+      (connection) => connection.provider === input.provider && connection.email.toLowerCase() === input.email.toLowerCase()
+    ) ?? nextConnection;
+
   return {
-    connection: emailConnection,
+    connection: activeConnection,
     summary:
       "Mail kutusunda fatura, receipt, invoice ve payment confirmation mailleri tarandi; yalnizca algilanan abonelik adaylari listelendi.",
     preview: detectedEmailSubscriptions,
