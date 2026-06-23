@@ -1,0 +1,26 @@
+{
+  "name": "Gider Takip",
+  "short_name": "Gider Takip",
+  "description": "Aboneliklerini takip et, gelecek ödemeleri ve fiyat artışlarını tek ekranda gör.",
+  "lang": "tr-TR",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071015",
+  "theme_color": "#071015",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
