@@ -9,16 +9,13 @@ export default function AuthPanel() {
   const { signIn, signInWithGoogle, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [mode, setMode] = useState<AuthMode>(() => {
-    const params = new URLSearchParams(location.search);
-    return params.get("mode") === "signup" ? "signup" : "signin";
-  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const mode: AuthMode = new URLSearchParams(location.search).get("mode") === "signup" ? "signup" : "signin";
   const redirectTo =
     typeof location.state?.from === "string" && location.state.from.startsWith("/")
       ? location.state.from
@@ -99,36 +96,11 @@ export default function AuthPanel() {
       </div>
 
       <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setMode("signin")}
-            className={`rounded-full px-4 py-2 text-sm transition ${
-              mode === "signin"
-                ? "bg-emerald-700 text-white"
-                : "border border-emerald-100 bg-white text-slate-600"
-            }`}
-          >
-            Giriş yap
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("signup")}
-            className={`rounded-full px-4 py-2 text-sm transition ${
-              mode === "signup"
-                ? "bg-emerald-700 text-white"
-                : "border border-emerald-100 bg-white text-slate-600"
-            }`}
-          >
-            Kayıt ol
-          </button>
-        </div>
-
         <button
           type="button"
           onClick={handleGoogleAuth}
           disabled={isGoogleSubmitting || isSubmitting}
-          className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isGoogleSubmitting ? (
             <>

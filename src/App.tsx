@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter as Router, NavLink, Navigate, Route, Routes } from "react-router-dom";
-import { LayoutDashboard, LockKeyhole, LogOut, Mail, Plus, UserCircle2 } from "lucide-react";
+import { LayoutDashboard, LockKeyhole, LogOut, Plus, UserCircle2 } from "lucide-react";
 import Auth from "@/pages/Auth";
 import About from "@/pages/About";
 import Home from "@/pages/Home";
@@ -63,17 +63,28 @@ function AppShell() {
                 </NavLink>
               </>
             ) : (
-              <NavLink
-                to="/auth"
-                className={({ isActive }) =>
-                  `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-                    isActive ? "bg-emerald-700 text-white" : "bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
-                  }`
-                }
-              >
-                <Mail className="h-4 w-4" />
-                Giriş yap
-              </NavLink>
+              <div className="inline-flex rounded-full border border-emerald-200 bg-white p-1 shadow-sm">
+                <NavLink
+                  to="/auth?mode=signin"
+                  className={({ isActive }) =>
+                    `rounded-full px-5 py-2 text-sm transition ${
+                      isActive ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
+                    }`
+                  }
+                >
+                  Giriş yap
+                </NavLink>
+                <NavLink
+                  to="/auth?mode=signup"
+                  className={({ isActive }) =>
+                    `rounded-full px-5 py-2 text-sm transition ${
+                      isActive ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
+                    }`
+                  }
+                >
+                  Kayıt ol
+                </NavLink>
+              </div>
             )}
           </nav>
 
@@ -98,21 +109,7 @@ function AppShell() {
                   Çıkış yap
                 </button>
               </div>
-            ) : (
-              <NavLink
-                to="/auth?mode=signup"
-                className={({ isActive }) =>
-                  `inline-flex items-center gap-3 rounded-full px-4 py-2 text-sm transition ${
-                    isActive
-                      ? "bg-emerald-700 text-white"
-                      : "bg-white text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-50"
-                  }`
-                }
-              >
-                <LockKeyhole className="h-4 w-4" />
-                Kayıt ol
-              </NavLink>
-            )}
+            ) : null}
             {signOutError ? <p className="text-sm text-rose-600">{signOutError}</p> : null}
           </div>
         </header>
