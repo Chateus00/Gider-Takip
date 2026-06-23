@@ -1,21 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronRight,
-  Eye,
-  Inbox,
   LoaderCircle,
   Mail,
   ScanSearch,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { EmailAnalysisResponse, EmailProvider } from "../../shared/subscriptions";
 import { useAuth } from "@/contexts/AuthContext";
 import { connectEmail, createSubscription } from "@/utils/api";
-import { formatCurrency, formatDate } from "@/utils/formatters";
 import {
   analyzeLinkedMailbox,
   clearPendingMailProvider,
@@ -45,8 +40,6 @@ export default function SubscriptionForm() {
   const [analysis, setAnalysis] = useState<EmailAnalysisResponse | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [linkingProvider, setLinkingProvider] = useState<EmailProvider | "">("");
-  const [importingId, setImportingId] = useState("");
-  const [importedMap, setImportedMap] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [connectedAccounts, setConnectedAccounts] = useState(() => getStoredConnectedMailAccounts());
@@ -104,10 +97,9 @@ export default function SubscriptionForm() {
         })
       );
 
-      setImportedMap(Object.fromEntries(createdEntries));
       setAnalysis(response);
       setStatusMessage(
-        `${response.preview.length} abonelik kontrol paneline eklendi. Yeni bir hesap bağlamadıkça tekrar tarama yapman gerekmez.`
+        `${createdEntries.length} abonelik kontrol paneline eklendi. Yeni bir hesap bağlamadıkça tekrar tarama yapman gerekmez.`
       );
     } catch (analysisError) {
       setError(
@@ -133,25 +125,6 @@ export default function SubscriptionForm() {
     }
   }
 
-  const analysisStats = useMemo(() => {
-    if (!analysis?.preview.length) {
-      return null;
-    }
-
-    const totalMonthly = analysis.preview.reduce((total, item) => {
-      return total + (item.billingCycle === "yearly" ? item.currentAmount / 12 : item.currentAmount);
-    }, 0);
-    const averageConfidence =
-      analysis.preview.reduce((total, item) => total + item.confidence, 0) / analysis.preview.length;
-
-    return {
-      totalMonthly,
-      averageConfidence,
-      itemCount: analysis.preview.length,
-      importedCount: Object.keys(importedMap).length,
-    };
-  }, [analysis, importedMap]);
-
   const flowSteps = [
     {
       id: "connect",
@@ -171,7 +144,7 @@ export default function SubscriptionForm() {
       id: "review",
       title: "Sonuçları onayla",
       description: "Bulunan abonelikler otomatik olarak kontrol paneline eklenir.",
-      done: Boolean(analysisStats?.importedCount),
+      done: Boolean(analysis),
       active: Boolean(analysis) && !isAnalyzing,
     },
   ];
@@ -182,42 +155,6 @@ export default function SubscriptionForm() {
     }
 
     return "border-slate-200 bg-slate-50 text-slate-800";
-  }
-
-  async function handleImport(previewId: string) {
-    const previewItem = analysis?.preview.find((item) => item.id === previewId);
-
-    if (!previewItem) {
-      return;
-    }
-
-    setImportingId(previewId);
-    setError("");
-
-    try {
-      const created = await createSubscription({
-        name: previewItem.name,
-        category: previewItem.category,
-        logoUrl: previewItem.logoUrl,
-        currentAmount: previewItem.currentAmount,
-        currency: previewItem.currency,
-        billingCycle: previewItem.billingCycle,
-        nextPaymentDate: previewItem.nextPaymentDate,
-        reminderDaysBefore: 3,
-        notes: previewItem.notes,
-        detectionMethod: "email",
-        detectionConfidence: previewItem.confidence,
-      });
-      setImportedMap((current) => ({
-        ...current,
-        [previewId]: created.id,
-      }));
-      setStatusMessage(`${previewItem.name} Aboneliklerime eklendi.`);
-    } catch (importError) {
-      setError(importError instanceof Error ? importError.message : "Abonelik eklenemedi.");
-    } finally {
-      setImportingId("");
-    }
   }
 
   useEffect(() => {
@@ -346,7 +283,7 @@ export default function SubscriptionForm() {
                 : isAnalyzing
                   ? "E-postalar taranıyor"
                   : analysis
-                    ? "Onay aşaması"
+                    ? "Kontrol paneline aktarıldı"
                     : connectedAccounts.length
                       ? `${connectedAccounts.length} hesap bağlı`
                       : "Bağlantı bekleniyor"}
@@ -492,121 +429,27 @@ export default function SubscriptionForm() {
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm text-emerald-700">
-                <Sparkles className="h-4 w-4" />
-                {analysis.summary}
+                <CheckCircle2 className="h-4 w-4" />
+                Tarama tamamlandı
               </div>
             </div>
-
-            {analysisStats ? (
-              <div className="mt-4 grid gap-3 md:grid-cols-3">
-                <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Bulunan aday</p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950">{analysisStats.itemCount}</p>
-                  <p className="mt-1 text-sm text-slate-500">Faturalı e-posta eşleşmesiyle bulundu</p>
-                </div>
-                <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Aylık toplam</p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950">
-                    {formatCurrency(analysisStats.totalMonthly, "TRY")}
-                  </p>
-                  <p className="mt-1 text-sm text-slate-500">Yıllık planlar aylığa bölünerek hesaplandı</p>
-                </div>
-                <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Ortalama güven</p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950">
-                    %{Math.round(analysisStats.averageConfidence * 100)}
-                  </p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {analysisStats.importedCount} servis içeri aktarıldı
-                  </p>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="mt-4 grid gap-4">
-              {analysis.preview.map((item) => (
-                <article
-                  key={item.id}
-                  className="grid gap-4 rounded-[24px] border border-slate-200/80 bg-white px-4 py-4 md:grid-cols-[72px_1fr_auto]"
-                >
-                  <img src={item.logoUrl} alt={item.name} className="h-[72px] w-[72px] rounded-[20px] object-cover" />
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-lg font-semibold text-slate-950">{item.name}</h3>
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                        {item.category}
-                      </span>
-                      <span className="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-medium text-teal-700">
-                        Güven %{Math.round(item.confidence * 100)}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-slate-500">{item.notes}</p>
-                    <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
-                      <span>{formatCurrency(item.currentAmount, item.currency)}</span>
-                      <span>{formatDate(item.nextPaymentDate)}</span>
-                      <span>{item.billingCycle === "monthly" ? "Aylık" : "Yıllık"}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-end">
-                    {importedMap[item.id] ? (
-                      <div className="flex flex-wrap items-center justify-end gap-2">
-                        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700">
-                          <CheckCircle2 className="h-4 w-4" />
-                          Eklendi
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/abonelik/${importedMap[item.id]}`)}
-                          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
-                        >
-                          Detayı aç
-                          <Eye className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleImport(item.id)}
-                        disabled={importingId === item.id}
-                        className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
-                      >
-                        {importingId === item.id ? "Ekleniyor" : "Tekrar ekle"}
-                      </button>
-                    )}
-                  </div>
-                </article>
-              ))}
+            <div className="mt-4 rounded-[22px] border border-emerald-100 bg-white px-4 py-4">
+              <p className="text-sm font-semibold text-slate-900">Bulunan abonelikler kontrol paneline taşındı</p>
+              <p className="mt-1 text-sm text-slate-500">
+                Mail bağla ekranında tekrar listelemiyoruz. Tüm tespit edilen abonelikleri kontrol paneli sekmesinde görebilirsin.
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                Kontrol paneline git
+              </button>
             </div>
-
-            {analysisStats?.importedCount ? (
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-emerald-100 bg-white px-4 py-4">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Onaylanan abonelikler panele hazır</p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Tespit edilen abonelikler artık kontrol panelinde kalır; yeni tarama sadece güncelleme gerektiğinde gerekir.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => navigate("/")}
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-                >
-                  Panele git
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            ) : null}
           </div>
         ) : (
           <div className="mt-6 rounded-[28px] border border-dashed border-slate-200 bg-slate-50 px-5 py-6 text-sm leading-6 text-slate-500">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-400 shadow-sm">
-                <Inbox className="h-5 w-5" />
-              </div>
-              <div>
-                Sağlayıcıyı bağladıktan sonra e-postalarından bulunan abonelik adayları burada listelenir.
-              </div>
-            </div>
+            Sağlayıcıyı bağladıktan sonra bulunan abonelikler doğrudan kontrol paneline taşınır.
           </div>
         )}
 
