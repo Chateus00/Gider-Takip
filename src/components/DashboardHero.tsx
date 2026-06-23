@@ -1,18 +1,43 @@
 import { ArrowUpRight, CalendarClock, Coins, Sparkles, Wallet } from "lucide-react";
-import type { DashboardSummary } from "../../shared/subscriptions";
+import type { DashboardSummary, SubscriptionItem } from "../../shared/subscriptions";
 import { useI18n } from "@/contexts/I18nContext";
-import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
+import { formatCurrency, formatCurrencyGroups, formatDate, formatPercent } from "@/utils/formatters";
 
 interface DashboardHeroProps {
   summary: DashboardSummary;
+  items: SubscriptionItem[];
 }
 
-export default function DashboardHero({ summary }: DashboardHeroProps) {
+function toMonthlyCost(item: SubscriptionItem) {
+  return item.billingCycle === "yearly" ? item.currentAmount / 12 : item.currentAmount;
+}
+
+function groupAmountsByCurrency(
+  items: SubscriptionItem[],
+  getAmount: (item: SubscriptionItem) => number
+) {
+  return items.reduce<Record<string, number>>((totals, item) => {
+    totals[item.currency] = (totals[item.currency] ?? 0) + getAmount(item);
+    return totals;
+  }, {});
+}
+
+export default function DashboardHero({ summary, items }: DashboardHeroProps) {
   const { t } = useI18n();
   const increasePercent =
     summary.monthlyTotal > 0
       ? (summary.predictedMonthlyIncrease / summary.monthlyTotal) * 100
       : 0;
+  const sortedByDate = [...items].sort((left, right) => left.nextPaymentDate.localeCompare(right.nextPaymentDate));
+  const upcomingItem = sortedByDate[0];
+  const monthlyTotals = groupAmountsByCurrency(items, (item) => toMonthlyCost(item));
+  const yearlyTotals = groupAmountsByCurrency(items, (item) =>
+    item.billingCycle === "yearly" ? item.currentAmount : item.currentAmount * 12
+  );
+  const predictedIncreaseTotals = groupAmountsByCurrency(
+    items,
+    (item) => item.currentAmount * (item.predictedIncreaseRate / 100)
+  );
 
   const stats = [
     {
@@ -22,17 +47,22 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
     },
     {
       label: t("hero.stats.monthly"),
-      value: formatCurrency(summary.monthlyTotal, "TRY"),
+      value: formatCurrencyGroups(monthlyTotals),
       icon: Coins,
     },
     {
       label: t("hero.stats.upcoming"),
-      value: `${formatCurrency(summary.upcomingAmount, "TRY")} · ${formatDate(summary.upcomingDate)}`,
+      value: upcomingItem
+        ? `${formatCurrency(
+            upcomingItem.officialNextAmount ?? upcomingItem.currentAmount,
+            upcomingItem.currency
+          )} · ${formatDate(upcomingItem.nextPaymentDate)}`
+        : `${formatCurrency(summary.upcomingAmount, "USD")} · ${formatDate(summary.upcomingDate)}`,
       icon: CalendarClock,
     },
     {
       label: t("hero.stats.increase"),
-      value: `${formatPercent(increasePercent)} · ${formatCurrency(summary.predictedMonthlyIncrease, "TRY")}`,
+      value: `${formatPercent(increasePercent)} · ${formatCurrencyGroups(predictedIncreaseTotals)}`,
       icon: Sparkles,
     },
   ];
@@ -63,7 +93,7 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
               <ArrowUpRight className="h-4 w-4" />
             </a>
             <div className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-200">
-              {t("hero.yearlyTotal", { value: formatCurrency(summary.yearlyTotal, "TRY") })}
+              {t("hero.yearlyTotal", { value: formatCurrencyGroups(yearlyTotals) })}
             </div>
           </div>
         </div>

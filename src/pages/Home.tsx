@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      <DashboardHero summary={dashboard.summary} />
+      <DashboardHero summary={dashboard.summary} items={dashboard.items} />
 
       <section className="space-y-5">
         <div className="space-y-6">

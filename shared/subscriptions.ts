@@ -85,6 +85,7 @@ export interface DashboardResponse {
 
 export interface PredictionResponse {
   currentAmount: number;
+  currency: string;
   officialNextAmount?: number;
   predictedIncreaseRate: number;
   predictedAmounts: ForecastPoint[];

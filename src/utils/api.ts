@@ -93,6 +93,7 @@ function createPredictedAmounts(amount: number) {
 function buildPrediction(item: SubscriptionItem): PredictionResponse {
   return {
     currentAmount: item.currentAmount,
+    currency: item.currency,
     officialNextAmount: item.officialNextAmount,
     predictedIncreaseRate: item.predictedIncreaseRate,
     predictedAmounts: item.predictedAmounts,

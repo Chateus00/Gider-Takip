@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatCurrency, formatDate, formatPercent } from "./formatters";
+import { formatCurrency, formatCurrencyGroups, formatDate, formatPercent } from "./formatters";
 
 describe("formatters", () => {
   it("formats currency in Turkish locale", () => {
@@ -12,5 +12,12 @@ describe("formatters", () => {
 
   it("formats percentage with locale-aware decimal separator", () => {
     expect(formatPercent(8.73)).toBe("%8,7");
+  });
+
+  it("formats grouped currency amounts without forcing TRY", () => {
+    const result = formatCurrencyGroups({ USD: 20, EUR: 10 });
+
+    expect(result).toContain("$20");
+    expect(result).toContain("10,00");
   });
 });

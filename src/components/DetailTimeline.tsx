@@ -4,9 +4,10 @@ import { formatCurrency, formatDate } from "@/utils/formatters";
 
 interface DetailTimelineProps {
   items: PaymentEvent[];
+  currency: string;
 }
 
-export default function DetailTimeline({ items }: DetailTimelineProps) {
+export default function DetailTimeline({ items, currency }: DetailTimelineProps) {
   const { t } = useI18n();
   const sourceMap = {
     manual: t("detailTimeline.sources.manual"),
@@ -35,7 +36,7 @@ export default function DetailTimeline({ items }: DetailTimelineProps) {
               {sourceMap[item.source]}
             </p>
             <p className="text-right text-lg font-semibold text-slate-950">
-              {formatCurrency(item.amount, "TRY")}
+              {formatCurrency(item.amount, currency)}
             </p>
           </article>
         ))}

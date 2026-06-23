@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import type { PredictionResponse, SubscriptionItem } from "../../shared/subscriptions";
 import DetailTimeline from "@/components/DetailTimeline";
 import ForecastPanel from "@/components/ForecastPanel";
+import ReminderSelect from "@/components/ReminderSelect";
 import { useI18n } from "@/contexts/I18nContext";
 import { fetchPrediction, fetchSubscription, updateSubscription } from "@/utils/api";
 import { formatCurrency, formatDate } from "@/utils/formatters";
@@ -15,7 +16,6 @@ export default function SubscriptionDetail() {
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState("");
   const [isSavingReminder, setIsSavingReminder] = useState(false);
-  const reminderOptions = [0, 1, 3, 7, 14] as const;
 
   useEffect(() => {
     async function loadDetail() {
@@ -123,32 +123,18 @@ export default function SubscriptionDetail() {
                 <p className="text-xs uppercase tracking-[0.2em] text-emerald-200">{t("reminder.title")}</p>
                 <p className="mt-2 text-sm text-slate-200">{t("reminder.helper")}</p>
               </div>
-              <label className="inline-flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm text-white">
-                <span>{item.reminderDaysBefore === 0 ? t("reminder.disabled") : t("reminder.enabled")}</span>
-                <select
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-white">
+                  {item.reminderDaysBefore === 0 ? t("reminder.disabled") : t("reminder.enabled")}
+                </span>
+                <ReminderSelect
                   value={item.reminderDaysBefore}
                   disabled={isSavingReminder}
-                  onChange={(event) => void handleReminderChange(Number(event.target.value))}
-                  className="bg-transparent font-medium outline-none"
-                >
-                  {reminderOptions.map((option) => (
-                    <option key={option} value={option} className="text-slate-900">
-                      {option === 0
-                        ? t("reminder.options.off")
-                        : t(
-                            option === 1
-                              ? "reminder.options.one"
-                              : option === 3
-                                ? "reminder.options.three"
-                                : option === 7
-                                  ? "reminder.options.seven"
-                                  : "reminder.options.fourteen"
-                          )}
-                    </option>
-                  ))}
-                </select>
-                {isSavingReminder ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-              </label>
+                  isSaving={isSavingReminder}
+                  variant="dark"
+                  onChange={(value) => handleReminderChange(value)}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -169,7 +155,7 @@ export default function SubscriptionDetail() {
       </section>
 
       <ForecastPanel data={prediction} />
-      <DetailTimeline items={item.paymentHistory} />
+      <DetailTimeline items={item.paymentHistory} currency={item.currency} />
     </div>
   );
 }

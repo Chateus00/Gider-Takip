@@ -265,6 +265,7 @@ export function getPredictionById(id: string): PredictionResponse | undefined {
 
   return {
     currentAmount: item.currentAmount,
+    currency: item.currency,
     officialNextAmount: item.officialNextAmount,
     predictedIncreaseRate: item.predictedIncreaseRate,
     predictedAmounts: item.predictedAmounts,

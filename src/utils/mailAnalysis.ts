@@ -152,6 +152,18 @@ function parseAmount(value: string) {
     { regex: /(\d{1,4}(?:[.,]\d{1,2})?)\s?(?:\$|USD)/i, currency: "USD" },
     { regex: /(?:€|EUR)\s?(\d{1,4}(?:[.,]\d{1,2})?)/i, currency: "EUR" },
     { regex: /(\d{1,4}(?:[.,]\d{1,2})?)\s?(?:€|EUR)/i, currency: "EUR" },
+    { regex: /(?:£|GBP)\s?(\d{1,4}(?:[.,]\d{1,2})?)/i, currency: "GBP" },
+    { regex: /(\d{1,4}(?:[.,]\d{1,2})?)\s?(?:£|GBP)/i, currency: "GBP" },
+    { regex: /(?:₹|INR)\s?(\d{1,6}(?:[.,]\d{1,2})?)/i, currency: "INR" },
+    { regex: /(\d{1,6}(?:[.,]\d{1,2})?)\s?(?:₹|INR)/i, currency: "INR" },
+    { regex: /(?:¥|JPY)\s?(\d{1,6}(?:[.,]\d{1,2})?)/i, currency: "JPY" },
+    { regex: /(\d{1,6}(?:[.,]\d{1,2})?)\s?(?:¥|JPY)/i, currency: "JPY" },
+    { regex: /(?:₩|KRW)\s?(\d{1,8}(?:[.,]\d{1,2})?)/i, currency: "KRW" },
+    { regex: /(\d{1,8}(?:[.,]\d{1,2})?)\s?(?:₩|KRW)/i, currency: "KRW" },
+    { regex: /(?:CNY|RMB|CN¥)\s?(\d{1,6}(?:[.,]\d{1,2})?)/i, currency: "CNY" },
+    { regex: /(\d{1,6}(?:[.,]\d{1,2})?)\s?(?:CNY|RMB|CN¥)/i, currency: "CNY" },
+    { regex: /(?:AED)\s?(\d{1,6}(?:[.,]\d{1,2})?)/i, currency: "AED" },
+    { regex: /(\d{1,6}(?:[.,]\d{1,2})?)\s?(?:AED)/i, currency: "AED" },
   ];
 
   for (const pattern of currencyPatterns) {

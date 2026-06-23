@@ -27,12 +27,12 @@ export default function ForecastPanel({ data }: ForecastPanelProps) {
         <div className="rounded-[24px] bg-slate-950 p-5 text-white">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{t("forecast.currentAmount")}</p>
           <p className="mt-2 text-3xl font-semibold">
-            {formatCurrency(data.currentAmount, "TRY")}
+            {formatCurrency(data.currentAmount, data.currency)}
           </p>
           <p className="mt-6 text-xs uppercase tracking-[0.2em] text-slate-400">{t("forecast.nextKnownPayment")}</p>
           <p className="mt-2 text-xl font-medium text-teal-200">
             {data.officialNextAmount
-              ? formatCurrency(data.officialNextAmount, "TRY")
+              ? formatCurrency(data.officialNextAmount, data.currency)
               : t("common.noOfficialData")}
           </p>
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-slate-100">
@@ -54,7 +54,7 @@ export default function ForecastPanel({ data }: ForecastPanelProps) {
                 </p>
               </div>
               <p className="text-lg font-semibold text-slate-950">
-                {formatCurrency(item.amount, "TRY")}
+                {formatCurrency(item.amount, data.currency)}
               </p>
             </div>
           ))}

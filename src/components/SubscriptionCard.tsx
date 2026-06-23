@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { BellRing, ChevronRight, Clock3, Landmark, LoaderCircle, Mail, ScanSearch } from "lucide-react";
+import { BellRing, ChevronRight, Clock3, Landmark, Mail, ScanSearch } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SubscriptionItem } from "../../shared/subscriptions";
 import { useI18n } from "@/contexts/I18nContext";
+import ReminderSelect from "@/components/ReminderSelect";
 import { updateSubscription } from "@/utils/api";
 import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
 
 interface SubscriptionCardProps {
   item: SubscriptionItem;
 }
-
-const reminderOptions = [0, 1, 3, 7, 14] as const;
 
 export default function SubscriptionCard({ item }: SubscriptionCardProps) {
   const { t } = useI18n();
@@ -100,32 +99,12 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
               </p>
               <p className="mt-1 text-sm text-slate-600">{t("reminder.helper")}</p>
             </div>
-            <label className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm text-slate-700">
-              <span>{t("reminder.cardLabel")}</span>
-              <select
-                value={reminderDaysBefore}
-                disabled={isSavingReminder}
-                onChange={(event) => void handleReminderChange(Number(event.target.value))}
-                className="bg-transparent font-medium outline-none"
-              >
-                {reminderOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option === 0
-                      ? t("reminder.options.off")
-                      : t(
-                          option === 1
-                            ? "reminder.options.one"
-                            : option === 3
-                              ? "reminder.options.three"
-                              : option === 7
-                                ? "reminder.options.seven"
-                                : "reminder.options.fourteen"
-                        )}
-                  </option>
-                ))}
-              </select>
-              {isSavingReminder ? <LoaderCircle className="h-4 w-4 animate-spin text-emerald-700" /> : null}
-            </label>
+            <ReminderSelect
+              value={reminderDaysBefore}
+              disabled={isSavingReminder}
+              isSaving={isSavingReminder}
+              onChange={(value) => handleReminderChange(value)}
+            />
           </div>
           {saveError ? <p className="mt-2 text-sm text-rose-600">{saveError}</p> : null}
         </div>

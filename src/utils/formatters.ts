@@ -23,3 +23,16 @@ export function formatPercent(value: number) {
     maximumFractionDigits: 1,
   }).format(value / 100);
 }
+
+export function formatCurrencyGroups(groups: Record<string, number>) {
+  const entries = Object.entries(groups).filter(([, amount]) => Math.abs(amount) > 0.0001);
+
+  if (!entries.length) {
+    return formatCurrency(0, "USD");
+  }
+
+  return entries
+    .sort(([leftCurrency], [rightCurrency]) => leftCurrency.localeCompare(rightCurrency))
+    .map(([currency, amount]) => formatCurrency(amount, currency))
+    .join(" + ");
+}
