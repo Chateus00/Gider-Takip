@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
 import { BellRing, ChevronRight, Clock3, Landmark, Mail, ScanSearch } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SubscriptionItem } from "../../shared/subscriptions";
 import { useI18n } from "@/contexts/I18nContext";
-import ReminderSelect from "@/components/ReminderSelect";
-import { updateSubscription } from "@/utils/api";
 import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
 
 interface SubscriptionCardProps {
@@ -13,9 +10,6 @@ interface SubscriptionCardProps {
 
 export default function SubscriptionCard({ item }: SubscriptionCardProps) {
   const { t } = useI18n();
-  const [reminderDaysBefore, setReminderDaysBefore] = useState(item.reminderDaysBefore);
-  const [isSavingReminder, setIsSavingReminder] = useState(false);
-  const [saveError, setSaveError] = useState("");
   const estimatedAmount = item.officialNextAmount ?? item.predictedAmounts[0]?.amount ?? item.currentAmount;
   const hasConfirmedEstimate = typeof item.officialNextAmount === "number";
   const detectionMap = {
@@ -30,31 +24,10 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
   } as const;
   const detection = detectionMap[item.detectionMethod];
   const DetectionIcon = detection.icon;
-
-  useEffect(() => {
-    setReminderDaysBefore(item.reminderDaysBefore);
-  }, [item.reminderDaysBefore]);
-
-  async function handleReminderChange(nextValue: number) {
-    setSaveError("");
-    setReminderDaysBefore(nextValue);
-    setIsSavingReminder(true);
-
-    try {
-      const updated = await updateSubscription(item.id, { reminderDaysBefore: nextValue });
-      setReminderDaysBefore(updated.reminderDaysBefore);
-    } catch (error) {
-      setReminderDaysBefore(item.reminderDaysBefore);
-      setSaveError(error instanceof Error ? error.message : t("subscription.reminderUpdateFailed"));
-    } finally {
-      setIsSavingReminder(false);
-    }
-  }
-
   const reminderLabel =
-    reminderDaysBefore === 0
+    item.reminderDaysBefore === 0
       ? t("subscription.reminderOff")
-      : t("subscription.reminderSet", { count: reminderDaysBefore });
+      : t("subscription.reminderSet", { count: item.reminderDaysBefore });
 
   return (
     <article className="grid gap-4 rounded-[28px] border border-slate-200/70 bg-white/80 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(15,23,42,0.12)] md:grid-cols-[88px_1fr_auto]">
@@ -81,7 +54,6 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
         </div>
         <div>
           <h2 className="font-['Fraunces',serif] text-2xl text-slate-950">{item.name}</h2>
-          <p className="mt-1 text-sm text-slate-500">{item.notes}</p>
         </div>
         <div className="flex flex-wrap gap-3 text-sm text-slate-600">
           <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5">
@@ -93,35 +65,24 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
             {reminderLabel}
           </span>
         </div>
-        <div className="rounded-[22px] border border-emerald-100 bg-emerald-50/50 p-3">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-emerald-700">
-                {t("subscription.quickReminder")}
-              </p>
-              <p className="mt-1 text-sm text-slate-600">{t("reminder.helper")}</p>
-            </div>
-            <ReminderSelect
-              value={reminderDaysBefore}
-              disabled={isSavingReminder}
-              isSaving={isSavingReminder}
-              onChange={(value) => handleReminderChange(value)}
-            />
-          </div>
-          {saveError ? <p className="mt-2 text-sm text-rose-600">{saveError}</p> : null}
-        </div>
       </div>
 
       <div className="flex items-center justify-between gap-5 md:flex-col md:items-end md:justify-center">
         <div className="text-right">
           <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{t("subscription.currentPrice")}</p>
-          <p className="mt-1 text-2xl font-semibold text-slate-950">
-            {formatCurrency(item.currentAmount, item.currency)}
-          </p>
-          <p className="mt-3 text-xs uppercase tracking-[0.18em] text-slate-400">{t("subscription.estimatedPrice")}</p>
-          <p className="mt-1 text-lg font-semibold text-teal-700">
-            {formatCurrency(estimatedAmount, item.currency)}
-          </p>
+          <div className="mt-1 flex items-end justify-end gap-3">
+            <p className="text-2xl font-semibold text-slate-950">
+              {formatCurrency(item.currentAmount, item.currency)}
+            </p>
+            <div className="pb-0.5 text-right">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                {t("subscription.estimatedPrice")}
+              </p>
+              <p className="text-base font-semibold text-teal-700">
+                {formatCurrency(estimatedAmount, item.currency)}
+              </p>
+            </div>
+          </div>
           {hasConfirmedEstimate ? (
             <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-emerald-700">
               {t("subscription.confirmed")}
@@ -129,9 +90,6 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
           ) : null}
           <p className="mt-2 text-sm text-amber-600">
             {t("subscription.nextIncrease", { value: formatPercent(item.predictedIncreaseRate) })}
-          </p>
-          <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-400">
-            {t("common.confidence", { count: Math.round(item.detectionConfidence * 100) })}
           </p>
         </div>
         <Link
