@@ -59,6 +59,27 @@ export default function AuthPanel() {
   return (
     <section className="mx-auto max-w-3xl space-y-6">
       <div className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)] md:p-8">
+        <div className="mb-6 inline-flex rounded-full border border-emerald-200 bg-emerald-50/70 p-1">
+          <button
+            type="button"
+            onClick={() => navigate("/auth?mode=signin", { replace: true, state: location.state })}
+            className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+              mode === "signin" ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
+            }`}
+          >
+            Giriş yap
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/auth?mode=signup", { replace: true, state: location.state })}
+            className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+              mode === "signup" ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
+            }`}
+          >
+            Kayıt ol
+          </button>
+        </div>
+
         <button
           type="button"
           onClick={handleGoogleAuth}
