@@ -130,6 +130,35 @@ function readStorage<T>(key: string): T[] {
   }
 }
 
+function normalizeLegacyText(value: string) {
+  return value
+    .replace(/Iki ay sonra/g, translateText("api.predictionMonths.second"))
+    .replace(/Uc ay sonra/g, translateText("api.predictionMonths.third"))
+    .replace(/Sonraki odeme tahmini/g, translateText("api.predictedPaymentLabel"));
+}
+
+function normalizeSubscription(item: SubscriptionItem): SubscriptionItem {
+  return {
+    ...item,
+    notes: normalizeLegacyText(item.notes),
+    predictedAmounts: item.predictedAmounts.map((entry, index) => ({
+      ...entry,
+      month:
+        index === 0
+          ? translateText("api.predictionMonths.next")
+          : index === 1
+            ? translateText("api.predictionMonths.second")
+            : index === 2
+              ? translateText("api.predictionMonths.third")
+              : normalizeLegacyText(entry.month),
+    })),
+    paymentHistory: item.paymentHistory.map((entry) => ({
+      ...entry,
+      label: entry.source === "predicted" ? translateText("api.predictedPaymentLabel") : normalizeLegacyText(entry.label),
+    })),
+  };
+}
+
 function writeStorage<T>(key: string, value: T[]) {
   if (!isBrowser()) {
     return;
@@ -139,11 +168,13 @@ function writeStorage<T>(key: string, value: T[]) {
 }
 
 function getStoredSubscriptions() {
-  return readStorage<SubscriptionItem>(subscriptionsStorageKey);
+  const normalized = readStorage<SubscriptionItem>(subscriptionsStorageKey).map(normalizeSubscription);
+  setStoredSubscriptions(normalized);
+  return normalized;
 }
 
 function setStoredSubscriptions(items: SubscriptionItem[]) {
-  writeStorage(subscriptionsStorageKey, items);
+  writeStorage(subscriptionsStorageKey, items.map(normalizeSubscription));
 }
 
 function getStoredConnections() {
@@ -158,7 +189,7 @@ function mergeSubscriptions(primary: SubscriptionItem[], secondary: Subscription
   const merged = new Map<string, SubscriptionItem>();
 
   [...primary, ...secondary].forEach((item) => {
-    merged.set(item.id, item);
+    merged.set(item.id, normalizeSubscription(item));
   });
 
   return [...merged.values()];
