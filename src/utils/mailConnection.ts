@@ -38,7 +38,7 @@ async function getSessionWithProviderToken(session: Session | null) {
 
   if (!data.session?.provider_token) {
     throw new Error(
-      "Mail erisim tokeni bulunamadi. Google/Microsoft izin ekranini tekrar tamamlayip yeniden dene."
+      "Mail erişim anahtarı bulunamadı. Google/Microsoft izin ekranını tekrar tamamlayıp yeniden dene."
     );
   }
 
@@ -52,7 +52,7 @@ async function readJsonResponse(response: Response) {
     const message =
       (payload as { error?: { message?: string }; message?: string }).error?.message ||
       (payload as { message?: string }).message ||
-      "Mail kutusu okunamadi.";
+      "Mail kutusu okunamadı.";
 
     throw new Error(message);
   }
@@ -209,7 +209,7 @@ export async function analyzeLinkedMailbox(
   const email = activeSession.user?.email;
 
   if (!email) {
-    throw new Error("Kullanici e-postasi bulunamadi.");
+    throw new Error("Kullanıcı e-postası bulunamadı.");
   }
 
   const messages =

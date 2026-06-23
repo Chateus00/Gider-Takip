@@ -29,14 +29,14 @@ export default function AuthPanel() {
     try {
       if (mode === "signin") {
         await signIn(email, password);
-        setMessage("Giris basarili. Uygulamaya yonlendiriliyorsun.");
+        setMessage("Giriş başarılı. Uygulamaya yönlendiriliyorsun.");
         navigate(redirectTo, { replace: true });
       } else {
         const result = await signUp(email, password);
         setMessage(result);
       }
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Islem tamamlanamadi.");
+      setError(submitError instanceof Error ? submitError.message : "İşlem tamamlanamadı.");
     } finally {
       setIsSubmitting(false);
     }
@@ -49,23 +49,23 @@ export default function AuthPanel() {
           Supabase Auth
         </div>
         <h1 className="mt-4 font-['Fraunces',serif] text-4xl leading-tight">
-          Kayit ol, giris yap ve `Aboneliklerim` alanini kendi hesabinla kullan.
+          Kayıt ol, giriş yap ve Aboneliklerim alanını kendi hesabınla kullan.
         </h1>
         <p className="mt-4 text-sm leading-6 text-slate-300">
-          Email ve sifre ile kayit olusturuyoruz. Supabase tarafinda email dogrulama aciksa ilk kayittan sonra gelen kutuna onay maili duser.
+          E-posta ve şifre ile kayıt oluşturuyoruz. Supabase tarafında e-posta doğrulama açıksa ilk kayıttan sonra gelen kutuna onay maili düşer.
         </p>
 
         <div className="mt-8 space-y-3">
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-            <p className="text-sm font-medium text-white">Neler hazir?</p>
+            <p className="text-sm font-medium text-white">Neler hazır?</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Kayit ol, giris yap, oturum sakla ve cikis yap akislari Supabase ile baglandi.
+              Kayıt ol, giriş yap, oturumu açık tut ve çıkış yap akışları Supabase ile bağlı.
             </p>
           </div>
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-            <p className="text-sm font-medium text-white">Bir sonraki mantikli adim</p>
+            <p className="text-sm font-medium text-white">Bir sonraki adım</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Abonelik verilerini Supabase veritabanina tasiyip her kullaniciyi kendi verisiyle eslemek.
+              Abonelik verilerini kullanıcı bazlı saklayıp herkesin sadece kendi verisini görmesini sağlamak.
             </p>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function AuthPanel() {
                 : "border border-slate-200 bg-white text-slate-600"
             }`}
           >
-            Giris yap
+            Giriş yap
           </button>
           <button
             type="button"
@@ -93,7 +93,7 @@ export default function AuthPanel() {
                 : "border border-slate-200 bg-white text-slate-600"
             }`}
           >
-            Kayit ol
+            Kayıt ol
           </button>
         </div>
 
@@ -110,7 +110,7 @@ export default function AuthPanel() {
           </label>
 
           <label className="block space-y-2">
-            <span className="text-sm font-medium text-slate-700">Sifre</span>
+            <span className="text-sm font-medium text-slate-700">Şifre</span>
             <input
               required
               type="password"
@@ -129,17 +129,17 @@ export default function AuthPanel() {
             {isSubmitting ? (
               <>
                 <LoaderCircle className="h-4 w-4 animate-spin" />
-                Isleniyor
+                İşleniyor
               </>
             ) : mode === "signin" ? (
               <>
                 <LogIn className="h-4 w-4" />
-                Giris yap
+                Giriş yap
               </>
             ) : (
               <>
                 <UserPlus className="h-4 w-4" />
-                Kayit ol
+                Kayıt ol
               </>
             )}
           </button>

@@ -14,8 +14,8 @@ const statusMap = {
 };
 
 const detectionMap = {
-  email: { label: "Mail taramasi", icon: Mail },
-  ocr: { label: "OCR taramasi", icon: ScanSearch },
+  email: { label: "Mail taraması", icon: Mail },
+  ocr: { label: "OCR taraması", icon: ScanSearch },
   banking: { label: "Banka entegrasyonu", icon: Landmark },
 };
 
@@ -60,22 +60,22 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
           </span>
           <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5">
             <BellRing className="h-4 w-4" />
-            {item.reminderDaysBefore} gun once hatirlat
+            {item.reminderDaysBefore} gün önce hatırlat
           </span>
         </div>
       </div>
 
       <div className="flex items-center justify-between gap-5 md:flex-col md:items-end md:justify-center">
         <div className="text-right">
-          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Guncel ucret</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Güncel ücret</p>
           <p className="mt-1 text-2xl font-semibold text-slate-950">
             {formatCurrency(item.currentAmount, item.currency)}
           </p>
           <p className="mt-2 text-sm text-amber-600">
-            Sonraki art is tahmini {formatPercent(item.predictedIncreaseRate)}
+            Sonraki artış tahmini {formatPercent(item.predictedIncreaseRate)}
           </p>
           <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-400">
-            Guven %{Math.round(item.detectionConfidence * 100)}
+            Güven %{Math.round(item.detectionConfidence * 100)}
           </p>
         </div>
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition group-hover:border-slate-900 group-hover:text-slate-950">

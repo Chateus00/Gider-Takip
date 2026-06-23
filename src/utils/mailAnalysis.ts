@@ -222,15 +222,15 @@ function buildConfidence(message: MailMessageCandidate, amountFound: boolean) {
 
 function buildNotes(serviceName: string, message: MailMessageCandidate, provider: EmailProvider) {
   const source = provider === "gmail" ? "Gmail" : "Outlook";
-  return `${source} icindeki "${message.subject}" baslikli mailden ${serviceName} faturasi eslesti.`;
+  return `${source} içindeki "${message.subject}" başlıklı e-postadan ${serviceName} faturası eşleşti.`;
 }
 
 function buildSummary(count: number) {
   if (count === 0) {
-    return "Bagli hesaptaki son mailler tarandi, net bir abonelik faturasi bulunamadi.";
+    return "Bağlı hesaptaki son e-postalar tarandı, net bir abonelik faturası bulunamadı.";
   }
 
-  return `Bagli hesaptaki mailler tarandi; ${count} abonelik adayi bulundu.`;
+  return `Bağlı hesaptaki e-postalar tarandı; ${count} abonelik adayı bulundu.`;
 }
 
 export function extractSubscriptionsFromMessages(

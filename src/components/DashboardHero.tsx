@@ -19,17 +19,17 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
       icon: Wallet,
     },
     {
-      label: "Aylik yuk",
+      label: "Aylık yük",
       value: formatCurrency(summary.monthlyTotal, "TRY"),
       icon: Coins,
     },
     {
-      label: "Yaklasan odeme",
+      label: "Yaklaşan ödeme",
       value: `${formatCurrency(summary.upcomingAmount, "TRY")} · ${formatDate(summary.upcomingDate)}`,
       icon: CalendarClock,
     },
     {
-      label: "Tahmini artis",
+      label: "Tahmini artış",
       value: `${formatPercent(increasePercent)} · ${formatCurrency(summary.predictedMonthlyIncrease, "TRY")}`,
       icon: Sparkles,
     },
@@ -46,10 +46,10 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
           </div>
           <div className="space-y-3">
             <h1 className="max-w-2xl font-['Fraunces',serif] text-4xl leading-tight text-white md:text-5xl">
-              Tum aboneliklerini tek bakista gor, sonraki zamlari erken yakala.
+              Tüm aboneliklerini tek bakışta gör, zamları erken yakala.
             </h1>
             <p className="max-w-2xl text-sm text-slate-300 md:text-base">
-              Sade kontrol paneli, gorsel servis kartlari ve AI destekli fiyat projeksiyonlari ile bu ay ne odeyecegini ve yaklasan artis risklerini ayni yerde toplar.
+              Bu ay ne ödeyeceğini ve yaklaşan artış risklerini tek ekranda takip et.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -57,11 +57,11 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
               href="/abonelik/yeni"
               className="inline-flex items-center gap-2 rounded-full bg-teal-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-teal-200"
             >
-              Mail hesabini bagla
+              Mail hesabını bağla
               <ArrowUpRight className="h-4 w-4" />
             </a>
             <div className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-200">
-              Yillik toplam {formatCurrency(summary.yearlyTotal, "TRY")}
+              Yıllık toplam {formatCurrency(summary.yearlyTotal, "TRY")}
             </div>
           </div>
         </div>

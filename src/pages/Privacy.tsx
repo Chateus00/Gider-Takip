@@ -5,54 +5,54 @@ export default function Privacy() {
         Privacy Policy
       </div>
 
-      <h1 className="mt-4 font-['Fraunces',serif] text-4xl text-slate-950">Gizlilik Politikasi</h1>
+      <h1 className="mt-4 font-['Fraunces',serif] text-4xl text-slate-950">Gizlilik Politikası</h1>
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Bu politika, Gider Takip uygulamasinin hangi verileri neden isledigini ve kullanicilarin
-        bu veriler uzerindeki haklarini aciklar.
+        Bu politika, Gider Takip uygulamasının hangi verileri neden işlediğini ve kullanıcıların
+        bu veriler üzerindeki haklarını açıklar.
       </p>
 
       <div className="mt-8 space-y-6 text-sm leading-6 text-slate-700">
         <section>
           <h2 className="text-base font-semibold text-slate-950">Toplanan veriler</h2>
           <p className="mt-2">
-            Hesap olustururken e-posta adresinizi ve kimlik dogrulama icin gerekli oturum
-            bilgilerinizi isleriz. Mail baglama ozelligini kullanirsaniz, secilen saglayicidan
-            gelen erisim belirteci ve abonelik tespiti icin gereken sinirli e-posta iceriklerini
-            gecici olarak kullaniriz.
+            Hesap oluştururken e-posta adresinizi ve kimlik doğrulama için gerekli oturum
+            bilgilerinizi işleriz. Mail bağlama özelliğini kullanırsanız, seçilen sağlayıcıdan
+            gelen erişim belirteci ve abonelik tespiti için gereken sınırlı e-posta içeriklerini
+            geçici olarak kullanırız.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Verilerin kullanim amaci</h2>
+          <h2 className="text-base font-semibold text-slate-950">Verilerin kullanım amacı</h2>
           <p className="mt-2">
-            Verileriniz; hesabiniza giris yapmanizi saglamak, abonelikleri tespit etmek, uygulama
-            icindeki kayitlari size ozel gostermek ve hizmetin guvenligini korumak icin kullanilir.
+            Verileriniz; hesabınıza giriş yapmanızı sağlamak, abonelikleri tespit etmek, uygulama
+            içindeki kayıtları size özel göstermek ve hizmetin güvenliğini korumak için kullanılır.
           </p>
         </section>
 
         <section>
           <h2 className="text-base font-semibold text-slate-950">Google ve Microsoft entegrasyonlari</h2>
           <p className="mt-2">
-            Gmail ve Outlook baglantilari yalnizca sizin acik onayinizla baslatilir. Mail
-            icerikleri reklam amacli kullanilmaz, satilmaz ve sadece abonelik tespiti amaciyla
-            islenir.
+            Gmail ve Outlook bağlantıları yalnızca sizin açık onayınızla başlatılır. Mail
+            içerikleri reklam amaçlı kullanılmaz, satılmaz ve sadece abonelik tespiti amacıyla
+            işlenir.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Saklama ve guvenlik</h2>
+          <h2 className="text-base font-semibold text-slate-950">Saklama ve güvenlik</h2>
           <p className="mt-2">
-            Veriler, hizmetin calismasi icin gerekli oldugu sure boyunca saklanir. Hesap ve oturum
-            islemleri Supabase altyapisi uzerinden korunur. Yetkisiz erisimi azaltmak icin teknik
-            ve operasyonel onlemler uygulanir.
+            Veriler, hizmetin çalışması için gerekli olduğu süre boyunca saklanır. Hesap ve oturum
+            işlemleri Supabase altyapısı üzerinden korunur. Yetkisiz erişimi azaltmak için teknik
+            ve operasyonel önlemler uygulanır.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Iletisim</h2>
+          <h2 className="text-base font-semibold text-slate-950">İletişim</h2>
           <p className="mt-2">
-            Gizlilikle ilgili talepleriniz icin uygulama sahibi ile `gidertakip.tr` uzerinden
-            iletisime gecebilirsiniz. Bu metin, hizmet gelistikce guncellenebilir.
+            Gizlilikle ilgili talepleriniz için uygulama sahibi ile `gidertakip.tr` üzerinden
+            iletişime geçebilirsiniz. Bu metin, hizmet geliştikçe güncellenebilir.
           </p>
         </section>
       </div>

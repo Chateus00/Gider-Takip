@@ -15,14 +15,14 @@ import { useAuth } from "@/contexts/AuthContext";
 function AppShell() {
   const { isLoading, session, signOut } = useAuth();
   const [signOutError, setSignOutError] = useState("");
-  const userEmail = session?.user.email ?? "Misafir kullanici";
+  const userEmail = session?.user.email ?? "Misafir kullanıcı";
 
   async function handleSignOut() {
     try {
       setSignOutError("");
       await signOut();
     } catch (error) {
-      setSignOutError(error instanceof Error ? error.message : "Cikis yapilamadi.");
+      setSignOutError(error instanceof Error ? error.message : "Çıkış yapılamadı.");
     }
   }
 
@@ -31,7 +31,7 @@ function AppShell() {
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 md:px-6 lg:px-8">
         <header className="mb-8 flex flex-col gap-4 rounded-[32px] border border-white/60 bg-white/70 px-5 py-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Abonelik takip uygulamasi</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Abonelik takip uygulaması</p>
             <h1 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">Gider Takip</h1>
           </div>
 
@@ -59,7 +59,7 @@ function AppShell() {
                   }
                 >
                   <Plus className="h-4 w-4" />
-                  Mail bagla
+                  Mail bağla
                 </NavLink>
               </>
             ) : (
@@ -72,7 +72,7 @@ function AppShell() {
                 }
               >
                 <Mail className="h-4 w-4" />
-                Giris yap
+                Giriş yap
               </NavLink>
             )}
           </nav>
@@ -81,7 +81,7 @@ function AppShell() {
             {isLoading ? (
               <div className="inline-flex items-center gap-3 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-600">
                 <LockKeyhole className="h-4 w-4" />
-                Oturum kontrol ediliyor
+                  Oturum kontrol ediliyor
               </div>
             ) : session ? (
               <div className="flex flex-wrap items-center gap-2">
@@ -95,13 +95,13 @@ function AppShell() {
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-slate-950 hover:text-slate-950"
                 >
                   <LogOut className="h-4 w-4" />
-                  Cikis yap
+                  Çıkış yap
                 </button>
               </div>
             ) : (
               <div className="inline-flex items-center gap-3 rounded-full bg-amber-50 px-4 py-2 text-sm text-amber-700">
                 <LockKeyhole className="h-4 w-4" />
-                Supabase ile email girisi hazir
+                Supabase ile e-posta girişi hazır
               </div>
             )}
             {signOutError ? <p className="text-sm text-rose-600">{signOutError}</p> : null}
@@ -145,16 +145,16 @@ function AppShell() {
 
         <footer className="border-t border-white/60 px-2 py-6 text-sm text-slate-500">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p>Gider Takip, kullanici hesaplari ve mail baglama ozelligi icin gerekli verileri isler.</p>
+            <p>Gider Takip, kullanıcı hesapları ve mail bağlama özelliği için gerekli verileri işler.</p>
             <div className="flex flex-wrap items-center gap-4">
               <NavLink to="/hakkinda" className="transition hover:text-slate-950">
-                Uygulama hakkinda
+                Uygulama hakkında
               </NavLink>
               <NavLink to="/privacy" className="transition hover:text-slate-950">
-                Gizlilik politikasi
+                Gizlilik politikası
               </NavLink>
               <NavLink to="/terms" className="transition hover:text-slate-950">
-                Kullanim kosullari
+                Kullanım koşulları
               </NavLink>
             </div>
           </div>

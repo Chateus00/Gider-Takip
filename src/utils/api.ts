@@ -2,7 +2,6 @@ import type {
   CreateSubscriptionInput,
   DashboardResponse,
   DetectionMethod,
-  DiscoverResponse,
   EmailAnalysisResponse,
   EmailConnectInput,
   IntakeMethod,
@@ -19,8 +18,8 @@ function buildApiUrl(path: string) {
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const payload = await response.json().catch(() => ({ message: "Bir hata olustu." }));
-    throw new Error(payload.message ?? "Bir hata olustu.");
+    const payload = await response.json().catch(() => ({ message: "Bir hata oluştu." }));
+    throw new Error(payload.message ?? "Bir hata oluştu.");
   }
 
   return response.json() as Promise<T>;
@@ -83,9 +82,4 @@ export async function connectEmail(input: EmailConnectInput) {
   });
 
   return handleResponse<EmailAnalysisResponse>(response);
-}
-
-export async function fetchDiscoverItems(query = "") {
-  const response = await fetch(buildApiUrl(`/api/discover?q=${encodeURIComponent(query)}`));
-  return handleResponse<DiscoverResponse>(response);
 }

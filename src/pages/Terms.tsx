@@ -5,53 +5,53 @@ export default function Terms() {
         Terms Of Service
       </div>
 
-      <h1 className="mt-4 font-['Fraunces',serif] text-4xl text-slate-950">Kullanim Kosullari</h1>
+      <h1 className="mt-4 font-['Fraunces',serif] text-4xl text-slate-950">Kullanım Koşulları</h1>
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Bu kosullar, Gider Takip uygulamasini kullanirken uymaniz gereken temel kurallari aciklar.
+        Bu koşullar, Gider Takip uygulamasını kullanırken uymanız gereken temel kuralları açıklar.
       </p>
 
       <div className="mt-8 space-y-6 text-sm leading-6 text-slate-700">
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Hizmetin kapsami</h2>
+          <h2 className="text-base font-semibold text-slate-950">Hizmetin kapsamı</h2>
           <p className="mt-2">
-            Gider Takip, kullanicilarin abonelik ve duzenli odeme kalemlerini takip etmesine yardim
-            eden bir uygulamadir. Sunulan ozellikler zaman icinde degisebilir, gelistirilebilir
-            veya sinirlandirilabilir.
+            Gider Takip, kullanıcıların abonelik ve düzenli ödeme kalemlerini takip etmesine yardım
+            eden bir uygulamadır. Sunulan özellikler zaman içinde değişebilir, geliştirilebilir
+            veya sınırlandırılabilir.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Kullanici sorumlulugu</h2>
+          <h2 className="text-base font-semibold text-slate-950">Kullanıcı sorumluluğu</h2>
           <p className="mt-2">
-            Hesap bilgilerinizin guvenliginden siz sorumlusunuz. Uygulamayi hukuka aykiri, zarar
-            verici veya baska kullanicilarin deneyimini bozacak sekilde kullanmamayi kabul
+            Hesap bilgilerinizin güvenliğinden siz sorumlusunuz. Uygulamayı hukuka aykırı, zarar
+            verici veya başka kullanıcıların deneyimini bozacak şekilde kullanmamayı kabul
             edersiniz.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Ucuncu taraf hizmetler</h2>
+          <h2 className="text-base font-semibold text-slate-950">Üçüncü taraf hizmetler</h2>
           <p className="mt-2">
-            Uygulama; Supabase, Google ve Microsoft gibi ucuncu taraf servislerle entegre olabilir.
-            Bu servislerin kullanimina iliskin ek kosullar kendi saglayicilari tarafindan
+            Uygulama; Supabase, Google ve Microsoft gibi üçüncü taraf servislerle entegre olabilir.
+            Bu servislerin kullanımına ilişkin ek koşullar kendi sağlayıcıları tarafından
             belirlenir.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Sorumlulugun sinirlandirilmasi</h2>
+          <h2 className="text-base font-semibold text-slate-950">Sorumluluğun sınırlandırılması</h2>
           <p className="mt-2">
-            Hizmet oldugu gibi sunulur. Teknik kesintiler, ucuncu taraf servis sorunlari veya
-            gecikmeler nedeniyle dogabilecek zararlarda makul yasal sinirlar dahilinde sorumluluk
-            sinirli olabilir.
+            Hizmet olduğu gibi sunulur. Teknik kesintiler, üçüncü taraf servis sorunları veya
+            gecikmeler nedeniyle doğabilecek zararlarda makul yasal sınırlar dahilinde sorumluluk
+            sınırlı olabilir.
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-slate-950">Guncellemeler</h2>
+          <h2 className="text-base font-semibold text-slate-950">Güncellemeler</h2>
           <p className="mt-2">
-            Bu kosullar gerek duyuldugunda guncellenebilir. Uygulamayi kullanmaya devam etmeniz,
-            guncel kosullari kabul ettiginiz anlamina gelir.
+            Bu koşullar gerek duyulduğunda güncellenebilir. Uygulamayı kullanmaya devam etmeniz,
+            güncel koşulları kabul ettiğiniz anlamına gelir.
           </p>
         </section>
       </div>

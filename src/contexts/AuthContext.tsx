@@ -66,10 +66,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         if (!data.session) {
-          return "Kayit olusturuldu. E-posta dogrulama baglantisini kontrol et.";
+          return "Kayıt oluşturuldu. E-posta doğrulama bağlantısını kontrol et.";
         }
 
-        return "Kayit basariyla tamamlandi.";
+        return "Kayıt başarıyla tamamlandı.";
       },
       async signIn(email: string, password: string) {
         const { error } = await supabase.auth.signInWithPassword({

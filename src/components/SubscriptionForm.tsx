@@ -25,13 +25,13 @@ import {
 const providerText = {
   gmail: {
     label: "Google / Gmail",
-    button: "Google ile bagla",
-    helper: "Gmail API uzerinden receipt, invoice ve yenileme mailleri taranir.",
+    button: "Google ile bağla",
+    helper: "Gmail API üzerinden fatura ve yenileme e-postaları taranır.",
   },
   outlook: {
     label: "Microsoft / Outlook",
-    button: "Microsoft ile bagla",
-    helper: "Microsoft Graph uzerinden Outlook / Hotmail mailleri taranir.",
+    button: "Microsoft ile bağla",
+    helper: "Microsoft Graph üzerinden Outlook / Hotmail e-postaları taranır.",
   },
 } as const;
 
@@ -50,14 +50,14 @@ export default function SubscriptionForm() {
   const hasHandledCallback = useRef(false);
 
   function toFriendlyError(connectError: unknown) {
-    const message = connectError instanceof Error ? connectError.message : "Mail hesabi baglanamadi.";
+    const message = connectError instanceof Error ? connectError.message : "Mail hesabı bağlanamadı.";
 
     if (message.toLowerCase().includes("manual linking")) {
-      return "Supabase panelinde Auth > Providers altindan manual linking ozelligini acman gerekiyor.";
+      return "Bu hesabı bağlamak için ek ayar gerekiyor. Lütfen daha sonra tekrar dene.";
     }
 
     if (message.toLowerCase().includes("unsupported provider")) {
-      return "Supabase provider ayarlari henuz tamamlanmamis gorunuyor.";
+      return "Mail bağlantısı ayarları tamamlanmamış görünüyor.";
     }
 
     return message;
@@ -65,14 +65,14 @@ export default function SubscriptionForm() {
 
   const handleAnalyze = useCallback(async (providerToScan: EmailProvider) => {
     if (!session) {
-      setError("Mail taramasi icin once giris yapmis olman gerekiyor.");
+      setError("Mail taraması için önce giriş yapmalısın.");
       return;
     }
 
     setIsAnalyzing(true);
     setError("");
     setImportedMap({});
-    setStatusMessage(`${providerText[providerToScan].label} baglandi, mailler taraniyor...`);
+    setStatusMessage(`${providerText[providerToScan].label} bağlandı, e-postalar taranıyor...`);
     setProvider(providerToScan);
 
     try {
@@ -85,7 +85,7 @@ export default function SubscriptionForm() {
       setStatusMessage(response.summary);
     } catch (analysisError) {
       setError(
-        analysisError instanceof Error ? analysisError.message : "Mail analizi baslatilamadi."
+        analysisError instanceof Error ? analysisError.message : "Mail analizi başlatılamadı."
       );
     } finally {
       setIsAnalyzing(false);
@@ -96,7 +96,7 @@ export default function SubscriptionForm() {
     setProvider(providerToConnect);
     setLinkingProvider(providerToConnect);
     setError("");
-    setStatusMessage(`${providerText[providerToConnect].label} icin baglanti ekrani aciliyor...`);
+    setStatusMessage(`${providerText[providerToConnect].label} için izin ekranı açılıyor...`);
 
     try {
       await startMailProviderLink(providerToConnect);
@@ -129,22 +129,22 @@ export default function SubscriptionForm() {
   const flowSteps = [
     {
       id: "connect",
-      title: "Saglayiciyi bagla",
-      description: "Google veya Microsoft hesabina izin ver.",
+      title: "Sağlayıcıyı bağla",
+      description: "Google veya Microsoft hesabına izin ver.",
       done: Boolean(analysis || isAnalyzing || linkingProvider),
       active: !analysis && !isAnalyzing,
     },
     {
       id: "scan",
-      title: "Fatura maillerini tara",
-      description: "Receipt, invoice ve yenileme mailleri eslestirilir.",
+      title: "E-postaları tara",
+      description: "Fatura ve yenileme e-postaları eşleştirilir.",
       done: Boolean(analysis),
       active: isAnalyzing || Boolean(linkingProvider),
     },
     {
       id: "review",
-      title: "Sonuclari onayla",
-      description: "Bulunan adaylari tek tek Aboneliklerime ekle.",
+      title: "Sonuçları onayla",
+      description: "Bulduklarını tek tek Aboneliklerime ekle.",
       done: Boolean(analysisStats?.importedCount),
       active: Boolean(analysis) && !isAnalyzing,
     },
@@ -186,7 +186,7 @@ export default function SubscriptionForm() {
         ...current,
         [previewId]: created.id,
       }));
-      setStatusMessage(`${previewItem.name} Aboneliklerim listesine eklendi.`);
+      setStatusMessage(`${previewItem.name} Aboneliklerime eklendi.`);
     } catch (importError) {
       setError(importError instanceof Error ? importError.message : "Abonelik eklenemedi.");
     } finally {
@@ -204,10 +204,10 @@ export default function SubscriptionForm() {
 
     if (callbackError === "identity_already_exists") {
       setError(
-        "Bu mail hesabi zaten bagli gorunuyor. Ayni saglayici zaten bagliysa yeniden baglamak yerine sadece tarama baslatilabilir."
+        "Bu mail hesabı zaten bağlı görünüyor. Bağlamak yerine taramayı başlatabilirsin."
       );
     } else {
-      setError(callbackErrorDescription ?? "Mail baglantisi tamamlanamadi.");
+      setError(callbackErrorDescription ?? "Mail bağlantısı tamamlanamadı.");
     }
 
     clearPendingMailProvider();
@@ -244,35 +244,27 @@ export default function SubscriptionForm() {
     <section className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
       <div className="rounded-[32px] border border-slate-200/70 bg-slate-950 p-6 text-white shadow-[0_26px_70px_rgba(15,23,42,0.35)]">
         <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-teal-200">
-          Ucretsiz mail analizi
+          Ücretsiz mail analizi
         </div>
         <h1 className="mt-4 font-['Fraunces',serif] text-4xl leading-tight">
-          Mail hesabini bagla, aboneliklerini otomatik analiz edelim.
+          Mail hesabını bağla, aboneliklerini bulalım.
         </h1>
         <p className="mt-4 text-sm leading-6 text-slate-300">
-          En sade yol, kullanicinin Gmail veya Outlook hesabini OAuth ile baglamasi. Biz de
-          sadece izin verilen faturali mailleri tarayip abonelik adaylarini cikariyoruz.
+          Gmail veya Outlook hesabını bağla; biz de fatura ve yenileme e-postalarından abonelik
+          adaylarını çıkaralım.
         </p>
         <div className="mt-8 space-y-3">
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
             <div className="inline-flex items-center gap-2 rounded-full bg-teal-400/10 px-3 py-1 text-xs text-teal-200">
               <ShieldCheck className="h-4 w-4" />
-              Guvenli yontem
+              Güvenli yöntem
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-300">
-              Kullanici sifresi toplamiyoruz. `Google ile bagla` ve `Microsoft ile bagla`
-              akislariyla sadece gerekli mail okuma iznini istiyoruz.
+              Şifren alınmaz. Sadece gerekli mail okuma izni istenir.
             </p>
           </div>
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-            <p className="text-sm font-medium text-white">Akis</p>
-            <p className="mt-2 text-sm leading-6 text-slate-300">
-              Once hesabi baglarsin, sonra faturali mailler taranir, bulunan servisler onizleme
-              listesine duser. Sadece onayladiklarin `Aboneliklerim` alanina eklenir.
-            </p>
-          </div>
-          <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-            <p className="text-sm font-medium text-white">Akis adimlari</p>
+            <p className="text-sm font-medium text-white">Akış adımları</p>
             <div className="mt-4 space-y-3">
               {flowSteps.map((step, index) => (
                 <div
@@ -312,25 +304,24 @@ export default function SubscriptionForm() {
       <div className="rounded-[32px] border border-slate-200/70 bg-white/85 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail baglantisi</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail bağlantısı</p>
             <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
               Aboneliklerini gelen kutundan yakala
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-              `Aboneliklerim` sekmesinde sadece burada baglanan hesaptan tespit edilip senin
-              onayladigin servisler yer alir.
+              Aboneliklerim sekmesinde sadece bu hesap üzerinden bulunan ve onayladığın servisler yer alır.
             </p>
           </div>
           <div className="rounded-[24px] bg-slate-50 px-4 py-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Akis durumu</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Durum</p>
             <p className="mt-1 text-sm font-medium text-slate-700">
               {linkingProvider
-                ? "Baglanti izni bekleniyor"
+                ? "Bağlantı izni bekleniyor"
                 : isAnalyzing
-                  ? "Mail kutusu taraniyor"
+                  ? "E-postalar taranıyor"
                   : analysis
-                    ? "Onay asamasi"
-                    : "Baglanti bekleniyor"}
+                    ? "Onay aşaması"
+                    : "Bağlantı bekleniyor"}
             </p>
           </div>
         </div>
@@ -341,15 +332,15 @@ export default function SubscriptionForm() {
               key={option}
               className={`rounded-[28px] border p-5 transition ${getCardTone(option)}`}
             >
-              <p className="text-xs uppercase tracking-[0.2em] opacity-70">Saglayici</p>
+              <p className="text-xs uppercase tracking-[0.2em] opacity-70">Sağlayıcı</p>
               <h3 className="mt-2 text-xl font-semibold">{providerText[option].label}</h3>
               <p className="mt-3 text-sm leading-6 opacity-80">{providerText[option].helper}</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className={`rounded-full px-3 py-1 ${provider === option ? "bg-white/10 text-white" : "bg-white text-slate-500"}`}>
-                  OAuth izin ekrani
+                  OAuth izin ekranı
                 </span>
                 <span className={`rounded-full px-3 py-1 ${provider === option ? "bg-white/10 text-white" : "bg-white text-slate-500"}`}>
-                  Fatura mail taramasi
+                  Fatura e-posta taraması
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap gap-3">
@@ -366,7 +357,7 @@ export default function SubscriptionForm() {
                   {linkingProvider === option ? (
                     <>
                       <LoaderCircle className="h-4 w-4 animate-spin" />
-                      Baglaniyor
+                      Bağlanıyor
                     </>
                   ) : (
                     <>
@@ -388,11 +379,11 @@ export default function SubscriptionForm() {
                   {isAnalyzing && provider === option ? (
                     <>
                       <LoaderCircle className="h-4 w-4 animate-spin" />
-                      Taraniyor
+                      Taranıyor
                     </>
                   ) : (
                     <>
-                      Bagli hesabi tara
+                      Bağlı hesabı tara
                       <Mail className="h-4 w-4" />
                     </>
                   )}
@@ -408,11 +399,8 @@ export default function SubscriptionForm() {
             Oturumdaki hesap
           </div>
           <p className="mt-2">
-            Sisteme giris yaptigin hesap: <span className="font-medium text-slate-950">{session?.user.email}</span>
-          </p>
-          <p className="mt-1">
-            Farkli bir Gmail veya Outlook baglamak istersen Supabase panelinde `Manual linking`
-            secenegini acman gerekiyor.
+            Sisteme giriş yaptığın hesap:{" "}
+            <span className="font-medium text-slate-950">{session?.user.email}</span>
           </p>
         </div>
 
@@ -429,26 +417,12 @@ export default function SubscriptionForm() {
               <div className="flex-1">
                 <p className="text-sm font-semibold text-slate-900">
                   {linkingProvider
-                    ? `${providerText[linkingProvider].label} icin izin ekrani aciliyor`
-                    : "Mail kutusunda fatura ve yenileme mailleri taraniyor"}
+                    ? `${providerText[linkingProvider].label} için izin ekranı açılıyor`
+                    : "E-postalar taranıyor"}
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-600">
-                  Bu adimda sadece odeme, makbuz ve abonelik sinyali tasiyan mailler incelenir.
+                  Bu adımda sadece ödeme, makbuz ve abonelik sinyali taşıyan e-postalar incelenir.
                 </p>
-                <div className="mt-4 grid gap-3 md:grid-cols-3">
-                  {[
-                    "Odeme bildirimleri ayiklaniyor",
-                    "Servis ve tutar bilgisi eslestiriliyor",
-                    "Onay ekranina guven puani hazirlaniyor",
-                  ].map((item) => (
-                    <div key={item} className="rounded-[18px] bg-white px-4 py-3 text-sm text-slate-600">
-                      <div className="flex items-center gap-2">
-                        <LoaderCircle className="h-4 w-4 animate-spin text-teal-600" />
-                        {item}
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
@@ -458,7 +432,7 @@ export default function SubscriptionForm() {
           <div className="mt-6 rounded-[28px] bg-slate-50 p-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Baglanan hesap</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Bağlanan hesap</p>
                 <p className="mt-1 text-sm font-medium text-slate-700">
                   {analysis.connection.email} · {providerText[analysis.connection.provider].label}
                 </p>
@@ -474,22 +448,22 @@ export default function SubscriptionForm() {
                 <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Bulunan aday</p>
                   <p className="mt-2 text-2xl font-semibold text-slate-950">{analysisStats.itemCount}</p>
-                  <p className="mt-1 text-sm text-slate-500">Faturali mail eslesmesiyle bulundu</p>
+                  <p className="mt-1 text-sm text-slate-500">Faturalı e-posta eşleşmesiyle bulundu</p>
                 </div>
                 <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Aylik toplam</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Aylık toplam</p>
                   <p className="mt-2 text-2xl font-semibold text-slate-950">
                     {formatCurrency(analysisStats.totalMonthly, "TRY")}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500">Yillik planlar ayliga bolunerek hesaplandi</p>
+                  <p className="mt-1 text-sm text-slate-500">Yıllık planlar aylığa bölünerek hesaplandı</p>
                 </div>
                 <div className="rounded-[22px] border border-slate-200 bg-white px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Ortalama guven</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Ortalama güven</p>
                   <p className="mt-2 text-2xl font-semibold text-slate-950">
                     %{Math.round(analysisStats.averageConfidence * 100)}
                   </p>
                   <p className="mt-1 text-sm text-slate-500">
-                    {analysisStats.importedCount} servis zaten iceri aktarildi
+                    {analysisStats.importedCount} servis içeri aktarıldı
                   </p>
                 </div>
               </div>
@@ -509,14 +483,14 @@ export default function SubscriptionForm() {
                         {item.category}
                       </span>
                       <span className="rounded-full bg-teal-50 px-3 py-1 text-[11px] font-medium text-teal-700">
-                        Guven %{Math.round(item.confidence * 100)}
+                        Güven %{Math.round(item.confidence * 100)}
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-slate-500">{item.notes}</p>
                     <div className="mt-3 flex flex-wrap gap-3 text-sm text-slate-600">
                       <span>{formatCurrency(item.currentAmount, item.currency)}</span>
                       <span>{formatDate(item.nextPaymentDate)}</span>
-                      <span>{item.billingCycle === "monthly" ? "Aylik" : "Yillik"}</span>
+                      <span>{item.billingCycle === "monthly" ? "Aylık" : "Yıllık"}</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-end">
@@ -531,7 +505,7 @@ export default function SubscriptionForm() {
                           onClick={() => navigate(`/abonelik/${importedMap[item.id]}`)}
                           className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
                         >
-                          Detayi ac
+                          Detayı aç
                           <Eye className="h-4 w-4" />
                         </button>
                       </div>
@@ -553,9 +527,9 @@ export default function SubscriptionForm() {
             {analysisStats?.importedCount ? (
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-emerald-100 bg-white px-4 py-4">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">Onaylanan abonelikler panele hazir</p>
+                  <p className="text-sm font-semibold text-slate-900">Onaylanan abonelikler panele hazır</p>
                   <p className="mt-1 text-sm text-slate-500">
-                    Istersen kontrole donup toplam harcama ve yaklasan odemeleri gorebilirsin.
+                    İstersen panele dönüp toplam harcamayı ve yaklaşan ödemeleri görebilirsin.
                   </p>
                 </div>
                 <button
@@ -576,35 +550,11 @@ export default function SubscriptionForm() {
                 <Inbox className="h-5 w-5" />
               </div>
               <div>
-                Saglayiciyi bagladiginda burada o gelen kutusundan algilanan abonelik adaylari
-                listelenir; sen onaylamadan `Aboneliklerim` sekmesine hicbir servis dusmez.
-                <div className="mt-4 grid gap-3 md:grid-cols-3">
-                  {[
-                    "Netflix, Spotify ve benzeri servisleri yakalar",
-                    "Tutari ve sonraki odeme tarihini cikarir",
-                    "Guven puani ile birlikte sana sunar",
-                  ].map((item) => (
-                    <div key={item} className="rounded-[18px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
-                      {item}
-                    </div>
-                  ))}
-                </div>
+                Sağlayıcıyı bağladıktan sonra e-postalarından bulunan abonelik adayları burada listelenir.
               </div>
             </div>
           </div>
         )}
-
-        <div className="mt-6 rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-500">
-          <div className="inline-flex items-center gap-2 font-medium text-slate-700">
-            <Mail className="h-4 w-4" />
-            Kurulum notu
-          </div>
-          <p className="mt-2">
-            Supabase panelinde `Google`, `Azure` ve `Manual linking` aktif oldugunda bu ekran
-            gercek OAuth baglantisini baslatir. Google tarafinda Gmail izni, Microsoft tarafinda
-            `Mail.Read` ve `email` scope'u gerekir.
-          </p>
-        </div>
 
         {statusMessage ? <p className="mt-4 text-sm text-emerald-700">{statusMessage}</p> : null}
         {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}

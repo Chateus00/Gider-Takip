@@ -81,7 +81,7 @@ export default function MailCallback() {
   return (
     <div className="flex min-h-[50vh] items-center justify-center gap-3 text-slate-500">
       <LoaderCircle className="h-5 w-5 animate-spin" />
-      Mail hesabi baglaniyor...
+      Mail hesabı bağlanıyor...
     </div>
   );
 }

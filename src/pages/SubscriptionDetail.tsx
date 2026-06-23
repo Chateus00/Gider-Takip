@@ -24,7 +24,7 @@ export default function SubscriptionDetail() {
         setItem(subscriptionData);
         setPrediction(predictionData);
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "Detay bilgisi yuklenemedi.");
+        setError(loadError instanceof Error ? loadError.message : "Detay bilgisi yüklenemedi.");
       }
     }
 
@@ -39,14 +39,14 @@ export default function SubscriptionDetail() {
     return (
       <div className="flex min-h-[50vh] items-center justify-center gap-3 text-slate-500">
         <LoaderCircle className="h-5 w-5 animate-spin" />
-        Detaylar yukleniyor...
+        Detaylar yükleniyor...
       </div>
     );
   }
 
   const detectionMap = {
-    email: { label: "Mail taramasi", icon: Mail },
-    ocr: { label: "OCR taramasi", icon: ScanSearch },
+    email: { label: "Mail taraması", icon: Mail },
+    ocr: { label: "OCR taraması", icon: ScanSearch },
     banking: { label: "Banka entegrasyonu", icon: Landmark },
   } as const;
 
@@ -60,7 +60,7 @@ export default function SubscriptionDetail() {
         className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-slate-950 hover:text-slate-950"
       >
         <ArrowLeft className="h-4 w-4" />
-        Panele don
+        Panele dön
       </Link>
 
       <section className="grid gap-6 rounded-[32px] border border-white/10 bg-slate-950 p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.4)] lg:grid-cols-[1.1fr_0.9fr]">
@@ -72,7 +72,7 @@ export default function SubscriptionDetail() {
               <h1 className="mt-2 font-['Fraunces',serif] text-4xl">{item.name}</h1>
               <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-slate-100">
                 <DetectionIcon className="h-4 w-4" />
-                {detection.label} · Guven %{Math.round(item.detectionConfidence * 100)}
+                {detection.label} · Güven %{Math.round(item.detectionConfidence * 100)}
               </div>
             </div>
           </div>
@@ -84,12 +84,12 @@ export default function SubscriptionDetail() {
               <p className="mt-2 text-2xl font-semibold">{formatCurrency(item.currentAmount, item.currency)}</p>
             </article>
             <article className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Sonraki odeme</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Sonraki ödeme</p>
               <p className="mt-2 text-2xl font-semibold">{formatDate(item.nextPaymentDate)}</p>
             </article>
             <article className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Hatirlatma</p>
-              <p className="mt-2 text-2xl font-semibold">{item.reminderDaysBefore} gun once</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Hatırlatma</p>
+              <p className="mt-2 text-2xl font-semibold">{item.reminderDaysBefore} gün önce</p>
             </article>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default function SubscriptionDetail() {
         <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-slate-100">
             <BadgeHelp className="h-4 w-4" />
-            AI odeme notlari
+            Ödeme notları
           </div>
           <div className="mt-5 space-y-3">
             {prediction.notes.map((note) => (
