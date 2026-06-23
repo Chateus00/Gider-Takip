@@ -138,7 +138,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="grid gap-4">
+                <div className="grid gap-4 xl:grid-cols-2">
                   {filteredItems.map((item) => (
                     <SubscriptionCard key={item.id} item={item} />
                   ))}

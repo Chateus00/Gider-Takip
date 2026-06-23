@@ -49,7 +49,7 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
   }
 
   return (
-    <article className="grid gap-4 rounded-[28px] border border-slate-200/70 bg-white/80 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(15,23,42,0.12)] md:grid-cols-[1fr_auto]">
+    <article className="grid gap-4 rounded-[28px] border border-slate-200/70 bg-white/80 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(15,23,42,0.12)] md:grid-cols-[minmax(0,1fr)_168px]">
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-slate-950 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white">
@@ -64,7 +64,7 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
           </span>
         </div>
         <div>
-          <h2 className="font-['Fraunces',serif] text-2xl text-slate-950">{item.name}</h2>
+          <h2 className="font-['Fraunces',serif] text-[2rem] leading-tight text-slate-950">{item.name}</h2>
         </div>
         <div className="flex flex-wrap gap-3 text-sm text-slate-600">
           <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5">
@@ -104,17 +104,17 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-5 md:min-w-[220px] md:flex-col md:items-center md:justify-start">
-        <div className="hidden h-[170px] w-[190px] items-center justify-center rounded-[28px] bg-slate-100 md:flex">
+      <div className="flex items-center justify-between gap-4 md:min-w-[168px] md:flex-col md:items-center md:justify-start">
+        <div className="hidden h-[132px] w-[132px] items-center justify-center rounded-[28px] bg-slate-100 md:flex">
           <img
             src={item.logoUrl}
             alt={item.name}
-            className="h-28 w-28 rounded-[28px] object-cover shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
+            className="h-24 w-24 rounded-[24px] object-cover shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
           />
         </div>
         <Link
           to={`/abonelik/${item.id}`}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950 md:mt-5"
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950 md:mt-4"
         >
           {t("subscription.detail")}
           <ChevronRight className="h-4 w-4" />
