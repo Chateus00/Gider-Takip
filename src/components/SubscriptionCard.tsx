@@ -104,17 +104,17 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-5 md:min-w-[120px] md:flex-col md:items-end md:justify-between">
-        <div className="hidden rounded-[24px] bg-slate-100 p-2 md:flex">
+      <div className="flex items-center justify-between gap-5 md:min-w-[220px] md:flex-col md:items-center md:justify-start">
+        <div className="hidden h-[170px] w-[190px] items-center justify-center rounded-[28px] bg-slate-100 md:flex">
           <img
             src={item.logoUrl}
             alt={item.name}
-            className="h-20 w-20 rounded-[20px] object-cover"
+            className="h-28 w-28 rounded-[28px] object-cover shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
           />
         </div>
         <Link
           to={`/abonelik/${item.id}`}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950"
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950 md:mt-5"
         >
           {t("subscription.detail")}
           <ChevronRight className="h-4 w-4" />
