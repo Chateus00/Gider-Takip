@@ -16,6 +16,8 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
   const [reminderDaysBefore, setReminderDaysBefore] = useState(item.reminderDaysBefore);
   const [isSavingReminder, setIsSavingReminder] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const estimatedAmount = item.officialNextAmount ?? item.predictedAmounts[0]?.amount ?? item.currentAmount;
+  const hasConfirmedEstimate = typeof item.officialNextAmount === "number";
   const detectionMap = {
     email: { label: t("subscription.detection.email"), icon: Mail },
     ocr: { label: t("subscription.detection.ocr"), icon: ScanSearch },
@@ -116,6 +118,15 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
           <p className="mt-1 text-2xl font-semibold text-slate-950">
             {formatCurrency(item.currentAmount, item.currency)}
           </p>
+          <p className="mt-3 text-xs uppercase tracking-[0.18em] text-slate-400">{t("subscription.estimatedPrice")}</p>
+          <p className="mt-1 text-lg font-semibold text-teal-700">
+            {formatCurrency(estimatedAmount, item.currency)}
+          </p>
+          {hasConfirmedEstimate ? (
+            <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-emerald-700">
+              {t("subscription.confirmed")}
+            </p>
+          ) : null}
           <p className="mt-2 text-sm text-amber-600">
             {t("subscription.nextIncrease", { value: formatPercent(item.predictedIncreaseRate) })}
           </p>

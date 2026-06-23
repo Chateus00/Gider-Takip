@@ -35,6 +35,11 @@ export default function ForecastPanel({ data }: ForecastPanelProps) {
               ? formatCurrency(data.officialNextAmount, data.currency)
               : t("common.noOfficialData")}
           </p>
+          {data.officialNextAmount ? (
+            <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-emerald-700">
+              {t("forecast.confirmed")}
+            </p>
+          ) : null}
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#efe1c6] px-3 py-1.5 text-sm text-slate-700">
             <TrendingUp className="h-4 w-4" />
             {t("forecast.expectedIncrease", { value: formatPercent(data.predictedIncreaseRate) })}
