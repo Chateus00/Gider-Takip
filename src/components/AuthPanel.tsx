@@ -2,11 +2,13 @@ import { useState, type FormEvent } from "react";
 import { Check, LoaderCircle, LogIn, UserPlus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 
 type AuthMode = "signin" | "signup";
 
 export default function AuthPanel() {
   const { signIn, signInWithGoogle, signUp } = useAuth();
+  const { t, tList } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -30,14 +32,14 @@ export default function AuthPanel() {
     try {
       if (mode === "signin") {
         await signIn(email, password);
-        setMessage("Giriş başarılı. Uygulamaya yönlendiriliyorsun.");
+        setMessage(t("auth.success"));
         navigate(redirectTo, { replace: true });
       } else {
         const result = await signUp(email, password);
         setMessage(result);
       }
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "İşlem tamamlanamadı.");
+      setError(submitError instanceof Error ? submitError.message : t("auth.actionFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -51,7 +53,7 @@ export default function AuthPanel() {
     try {
       await signInWithGoogle(redirectTo);
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Google ile giriş başlatılamadı.");
+      setError(submitError instanceof Error ? submitError.message : t("auth.googleStartFailed"));
       setIsGoogleSubmitting(false);
     }
   }
@@ -67,7 +69,7 @@ export default function AuthPanel() {
               mode === "signin" ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
             }`}
           >
-            Giriş yap
+            {t("auth.signIn")}
           </button>
           <button
             type="button"
@@ -76,7 +78,7 @@ export default function AuthPanel() {
               mode === "signup" ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-emerald-800"
             }`}
           >
-            Kayıt ol
+            {t("auth.signUp")}
           </button>
         </div>
 
@@ -89,25 +91,25 @@ export default function AuthPanel() {
           {isGoogleSubmitting ? (
             <>
               <LoaderCircle className="h-4 w-4 animate-spin" />
-              Google açılıyor
+              {t("auth.googleOpening")}
             </>
           ) : (
             <>
               <span className="text-base">G</span>
-              {mode === "signup" ? "Google ile kayıt ol" : "Google ile giriş yap"}
+              {mode === "signup" ? t("auth.googleSignUp") : t("auth.googleSignIn")}
             </>
           )}
         </button>
 
         <div className="mt-4 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-slate-400">
           <span className="h-px flex-1 bg-slate-200" />
-          veya e-posta ile
+          {t("auth.orEmail")}
           <span className="h-px flex-1 bg-slate-200" />
         </div>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <label className="block space-y-2">
-            <span className="text-sm font-medium text-slate-700">E-posta adresi</span>
+            <span className="text-sm font-medium text-slate-700">{t("auth.email")}</span>
             <input
               required
               type="email"
@@ -118,7 +120,7 @@ export default function AuthPanel() {
           </label>
 
           <label className="block space-y-2">
-            <span className="text-sm font-medium text-slate-700">Şifre</span>
+            <span className="text-sm font-medium text-slate-700">{t("auth.password")}</span>
             <input
               required
               type="password"
@@ -137,17 +139,17 @@ export default function AuthPanel() {
             {isSubmitting ? (
               <>
                 <LoaderCircle className="h-4 w-4 animate-spin" />
-                İşleniyor
+                {t("auth.processing")}
               </>
             ) : mode === "signin" ? (
               <>
                 <LogIn className="h-4 w-4" />
-                Giriş yap
+                {t("auth.signIn")}
               </>
             ) : (
               <>
                 <UserPlus className="h-4 w-4" />
-                Kayıt ol
+                {t("auth.signUp")}
               </>
             )}
           </button>
@@ -159,15 +161,10 @@ export default function AuthPanel() {
 
       <div className="rounded-[32px] border border-emerald-200/50 bg-[linear-gradient(180deg,#052e16_0%,#064e3b_100%)] p-7 text-white shadow-[0_26px_70px_rgba(6,78,59,0.25)] md:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-200">
-          Ayrıcalıklarımız
+          {t("auth.perksTitle")}
         </p>
         <div className="mt-5 space-y-5 text-lg leading-8 text-emerald-50">
-          {[
-            "Tek ekranda aylık toplamını gör.",
-            "Yaklaşan ödemeleri önceden fark et.",
-            "Zevkine uygun abonelik önerilerinden haberdar ol.",
-            "Gelecekte abonelik ücretlerine yapılacak zam tahminlerini öğren.",
-          ].map((item) => (
+          {tList("auth.perks").map((item) => (
             <div key={item} className="flex items-start gap-3">
               <span className="mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-300/20 text-emerald-200">
                 <Check className="h-4 w-4" />

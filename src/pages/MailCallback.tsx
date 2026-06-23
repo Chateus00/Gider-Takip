@@ -2,11 +2,13 @@ import { useEffect } from "react";
 import { LoaderCircle } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { supabase } from "@/lib/supabase";
 import { getPendingMailProvider } from "@/utils/mailConnection";
 
 export default function MailCallback() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const { session, isLoading } = useAuth();
 
@@ -81,7 +83,7 @@ export default function MailCallback() {
   return (
     <div className="flex min-h-[50vh] items-center justify-center gap-3 text-slate-500">
       <LoaderCircle className="h-5 w-5 animate-spin" />
-      Mail hesabı bağlanıyor...
+      {t("mailCallback.connecting")}
     </div>
   );
 }

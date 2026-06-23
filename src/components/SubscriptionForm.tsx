@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -10,6 +10,7 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { EmailAnalysisResponse, EmailProvider } from "../../shared/subscriptions";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { connectEmail, createSubscription } from "@/utils/api";
 import {
   analyzeLinkedMailbox,
@@ -19,20 +20,8 @@ import {
   startMailProviderLink,
 } from "@/utils/mailConnection";
 
-const providerText = {
-  gmail: {
-    label: "Google / Gmail",
-    button: "Google ile bağla",
-    helper: "Gmail API üzerinden fatura ve yenileme e-postaları taranır.",
-  },
-  outlook: {
-    label: "Microsoft / Outlook",
-    button: "Microsoft ile bağla",
-    helper: "Microsoft Graph üzerinden Outlook / Hotmail e-postaları taranır.",
-  },
-} as const;
-
 export default function SubscriptionForm() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { session } = useAuth();
@@ -45,15 +34,33 @@ export default function SubscriptionForm() {
   const [connectedAccounts, setConnectedAccounts] = useState(() => getStoredConnectedMailAccounts());
   const hasHandledCallback = useRef(false);
 
+  const providerText = useMemo(
+    () =>
+      ({
+        gmail: {
+          label: t("subscriptionForm.providerLabel.gmail"),
+          button: t("subscriptionForm.providerButton.gmail"),
+          helper: t("subscriptionForm.providerHelper.gmail"),
+        },
+        outlook: {
+          label: t("subscriptionForm.providerLabel.outlook"),
+          button: t("subscriptionForm.providerButton.outlook"),
+          helper: t("subscriptionForm.providerHelper.outlook"),
+        },
+      }) as const,
+    [t]
+  );
+
   function toFriendlyError(connectError: unknown) {
-    const message = connectError instanceof Error ? connectError.message : "Mail hesabı bağlanamadı.";
+    const message =
+      connectError instanceof Error ? connectError.message : t("subscriptionForm.errors.connectFailed");
 
     if (message.toLowerCase().includes("manual linking")) {
-      return "Bu hesabı bağlamak için ek ayar gerekiyor. Lütfen daha sonra tekrar dene.";
+      return t("subscriptionForm.errors.manualLinkingRequired");
     }
 
     if (message.toLowerCase().includes("unsupported provider")) {
-      return "Mail bağlantısı ayarları tamamlanmamış görünüyor.";
+      return t("subscriptionForm.errors.unsupportedProvider");
     }
 
     return message;
@@ -61,13 +68,17 @@ export default function SubscriptionForm() {
 
   const handleAnalyze = useCallback(async (providerToScan: EmailProvider) => {
     if (!session) {
-      setError("Mail taraması için önce giriş yapmalısın.");
+      setError(t("subscriptionForm.errors.signInRequired"));
       return;
     }
 
     setIsAnalyzing(true);
     setError("");
-    setStatusMessage(`${providerText[providerToScan].label} bağlandı, e-postalar taranıyor...`);
+    setStatusMessage(
+      t("subscriptionForm.statusMessages.scanningStarted", {
+        provider: providerText[providerToScan].label,
+      })
+    );
     setProvider(providerToScan);
 
     try {
@@ -99,22 +110,26 @@ export default function SubscriptionForm() {
 
       setAnalysis(response);
       setStatusMessage(
-        `${createdEntries.length} abonelik kontrol paneline eklendi. Yeni bir hesap bağlamadıkça tekrar tarama yapman gerekmez.`
+        t("subscriptionForm.summaryTransferred", { count: createdEntries.length })
       );
     } catch (analysisError) {
       setError(
-        analysisError instanceof Error ? analysisError.message : "Mail analizi başlatılamadı."
+        analysisError instanceof Error ? analysisError.message : t("subscriptionForm.errors.analyzeFailed")
       );
     } finally {
       setIsAnalyzing(false);
     }
-  }, [session]);
+  }, [providerText, session, t]);
 
   async function handleProviderConnect(providerToConnect: EmailProvider) {
     setProvider(providerToConnect);
     setLinkingProvider(providerToConnect);
     setError("");
-    setStatusMessage(`${providerText[providerToConnect].label} için izin ekranı açılıyor...`);
+    setStatusMessage(
+      t("subscriptionForm.statusMessages.permissionOpening", {
+        provider: providerText[providerToConnect].label,
+      })
+    );
 
     try {
       await startMailProviderLink(providerToConnect);
@@ -128,22 +143,22 @@ export default function SubscriptionForm() {
   const flowSteps = [
     {
       id: "connect",
-      title: "Sağlayıcıyı bağla",
-      description: "Google veya Microsoft hesabına izin ver.",
+      title: t("subscriptionForm.flow.link"),
+      description: t("subscriptionForm.flow.linkDescription"),
       done: Boolean(analysis || isAnalyzing || linkingProvider),
       active: !analysis && !isAnalyzing,
     },
     {
       id: "scan",
-      title: "E-postaları tara",
-      description: "Fatura ve yenileme e-postaları eşleştirilir.",
+      title: t("subscriptionForm.flow.scan"),
+      description: t("subscriptionForm.flow.scanDescription"),
       done: Boolean(analysis),
       active: isAnalyzing || Boolean(linkingProvider),
     },
     {
       id: "review",
-      title: "Sonuçları onayla",
-      description: "Bulunan abonelikler otomatik olarak kontrol paneline eklenir.",
+      title: t("subscriptionForm.flow.review"),
+      description: t("subscriptionForm.flow.reviewDescription"),
       done: Boolean(analysis),
       active: Boolean(analysis) && !isAnalyzing,
     },
@@ -166,17 +181,15 @@ export default function SubscriptionForm() {
     }
 
     if (callbackError === "identity_already_exists") {
-      setError(
-        "Bu mail hesabı zaten bağlı görünüyor. Bağlamak yerine taramayı başlatabilirsin."
-      );
+      setError(t("subscriptionForm.errors.alreadyConnected"));
     } else {
-      setError(callbackErrorDescription ?? "Mail bağlantısı tamamlanamadı.");
+      setError(callbackErrorDescription ?? t("subscriptionForm.errors.callbackFailed"));
     }
 
     clearPendingMailProvider();
     setStatusMessage("");
     navigate("/abonelik/yeni", { replace: true });
-  }, [navigate, searchParams]);
+  }, [navigate, searchParams, t]);
 
   useEffect(() => {
     const isConnected = searchParams.get("mail_connected") === "1";
@@ -207,27 +220,26 @@ export default function SubscriptionForm() {
     <section className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
       <div className="rounded-[32px] border border-slate-200/70 bg-slate-950 p-6 text-white shadow-[0_26px_70px_rgba(15,23,42,0.35)]">
         <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-teal-200">
-          Ücretsiz mail analizi
+          {t("subscriptionForm.heroBadge")}
         </div>
         <h1 className="mt-4 font-['Fraunces',serif] text-4xl leading-tight">
-          Mail hesabını bağla, aboneliklerini bulalım.
+          {t("subscriptionForm.heroTitle")}
         </h1>
         <p className="mt-4 text-sm leading-6 text-slate-300">
-          Gmail veya Outlook hesabını bağla; biz de fatura ve yenileme e-postalarından abonelik
-          adaylarını çıkaralım.
+          {t("subscriptionForm.heroDescription")}
         </p>
         <div className="mt-8 space-y-3">
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
             <div className="inline-flex items-center gap-2 rounded-full bg-teal-400/10 px-3 py-1 text-xs text-teal-200">
               <ShieldCheck className="h-4 w-4" />
-              Güvenli yöntem
+              {t("subscriptionForm.secureMethod")}
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-300">
-              Şifren alınmaz. Sadece gerekli mail okuma izni istenir.
+              {t("subscriptionForm.secureDescription")}
             </p>
           </div>
           <div className="rounded-[24px] border border-white/10 bg-white/5 p-4">
-            <p className="text-sm font-medium text-white">Akış adımları</p>
+            <p className="text-sm font-medium text-white">{t("subscriptionForm.flowStepsTitle")}</p>
             <div className="mt-4 space-y-3">
               {flowSteps.map((step, index) => (
                 <div
@@ -267,26 +279,26 @@ export default function SubscriptionForm() {
       <div className="rounded-[32px] border border-slate-200/70 bg-white/85 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail bağlantısı</p>
+            <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{t("subscriptionForm.providerStatus")}</p>
             <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
-              Aboneliklerini gelen kutundan yakala
+              {t("subscriptionForm.title")}
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-              Bağlı hesaplarda bulunan abonelikler kontrol paneline eklenir ve tekrar girişte yeniden tarama istemez.
+              {t("subscriptionForm.description")}
             </p>
           </div>
           <div className="rounded-[24px] bg-slate-50 px-4 py-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Durum</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{t("subscriptionForm.statusTitle")}</p>
             <p className="mt-1 text-sm font-medium text-slate-700">
               {linkingProvider
-                ? "Bağlantı izni bekleniyor"
+                ? t("subscriptionForm.statePermission")
                 : isAnalyzing
-                  ? "E-postalar taranıyor"
+                  ? t("subscriptionForm.stateScanning")
                   : analysis
-                    ? "Kontrol paneline aktarıldı"
+                    ? t("subscriptionForm.stateTransferred")
                     : connectedAccounts.length
-                      ? `${connectedAccounts.length} hesap bağlı`
-                      : "Bağlantı bekleniyor"}
+                      ? t("subscriptionForm.connectedCount", { count: connectedAccounts.length })
+                      : t("subscriptionForm.stateWaiting")}
             </p>
           </div>
         </div>
@@ -295,13 +307,13 @@ export default function SubscriptionForm() {
           <div className="mt-6 rounded-[24px] border border-emerald-100 bg-emerald-50/70 p-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Bağlı mail hesapları</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">{t("subscriptionForm.connectedAccounts")}</p>
                 <p className="mt-1 text-sm text-slate-600">
-                  İstersen yeni bir hesabı daha bağlayabilir veya bağlı hesaplardan birini tekrar tarayabilirsin.
+                  {t("subscriptionForm.connectedHint")}
                 </p>
               </div>
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-800">
-                {connectedAccounts.length} hesap
+                {t("subscriptionForm.accounts", { count: connectedAccounts.length })}
               </span>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -323,15 +335,15 @@ export default function SubscriptionForm() {
               key={option}
               className={`rounded-[28px] border p-5 transition ${getCardTone(option)}`}
             >
-              <p className="text-xs uppercase tracking-[0.2em] opacity-70">Sağlayıcı</p>
+              <p className="text-xs uppercase tracking-[0.2em] opacity-70">{t("subscriptionForm.providerCardLabel")}</p>
               <h3 className="mt-2 text-xl font-semibold">{providerText[option].label}</h3>
               <p className="mt-3 text-sm leading-6 opacity-80">{providerText[option].helper}</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className={`rounded-full px-3 py-1 ${provider === option ? "bg-white/10 text-white" : "bg-white text-slate-500"}`}>
-                  OAuth izin ekranı
+                  {t("subscriptionForm.oauthChip")}
                 </span>
                 <span className={`rounded-full px-3 py-1 ${provider === option ? "bg-white/10 text-white" : "bg-white text-slate-500"}`}>
-                  Fatura e-posta taraması
+                  {t("subscriptionForm.invoiceChip")}
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap gap-3">
@@ -348,11 +360,11 @@ export default function SubscriptionForm() {
                   {linkingProvider === option ? (
                     <>
                       <LoaderCircle className="h-4 w-4 animate-spin" />
-                      Bağlanıyor
+                      {t("subscriptionForm.connecting")}
                     </>
                   ) : (
                     <>
-                      {connectedAccounts.length ? "Bir hesap daha bağla" : providerText[option].button}
+                      {connectedAccounts.length ? t("subscriptionForm.providerButton.additional") : providerText[option].button}
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
@@ -370,11 +382,11 @@ export default function SubscriptionForm() {
                   {isAnalyzing && provider === option ? (
                     <>
                       <LoaderCircle className="h-4 w-4 animate-spin" />
-                      Taranıyor
+                      {t("subscriptionForm.scanning")}
                     </>
                   ) : (
                     <>
-                      Bağlı hesabı tara
+                      {t("subscriptionForm.scanLinkedAccount")}
                       <Mail className="h-4 w-4" />
                     </>
                   )}
@@ -387,11 +399,10 @@ export default function SubscriptionForm() {
         <div className="mt-4 rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
           <div className="inline-flex items-center gap-2 font-medium text-slate-800">
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-            Oturumdaki hesap
+            {t("subscriptionForm.sessionTitle")}
           </div>
           <p className="mt-2">
-            Sisteme giriş yaptığın hesap:{" "}
-            <span className="font-medium text-slate-950">{session?.user.email}</span>
+            {t("subscriptionForm.signedInAs", { email: session?.user.email ?? "-" })}
           </p>
         </div>
 
@@ -408,11 +419,11 @@ export default function SubscriptionForm() {
               <div className="flex-1">
                 <p className="text-sm font-semibold text-slate-900">
                   {linkingProvider
-                    ? `${providerText[linkingProvider].label} için izin ekranı açılıyor`
-                    : "E-postalar taranıyor"}
+                    ? t("subscriptionForm.openingPermissionTitle", { provider: providerText[linkingProvider].label })
+                    : t("subscriptionForm.scanningTitle")}
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-600">
-                  Bu adımda sadece ödeme, makbuz ve abonelik sinyali taşıyan e-postalar incelenir.
+                  {t("subscriptionForm.activityDescription")}
                 </p>
               </div>
             </div>
@@ -423,33 +434,33 @@ export default function SubscriptionForm() {
           <div className="mt-6 rounded-[28px] bg-slate-50 p-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Bağlanan hesap</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{t("subscriptionForm.connectedAccount")}</p>
                 <p className="mt-1 text-sm font-medium text-slate-700">
                   {analysis.connection.email} · {providerText[analysis.connection.provider].label}
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-sm text-emerald-700">
                 <CheckCircle2 className="h-4 w-4" />
-                Tarama tamamlandı
+                {t("subscriptionForm.scanComplete")}
               </div>
             </div>
             <div className="mt-4 rounded-[22px] border border-emerald-100 bg-white px-4 py-4">
-              <p className="text-sm font-semibold text-slate-900">Bulunan abonelikler kontrol paneline taşındı</p>
+              <p className="text-sm font-semibold text-slate-900">{t("subscriptionForm.transferredTitle")}</p>
               <p className="mt-1 text-sm text-slate-500">
-                Mail bağla ekranında tekrar listelemiyoruz. Tüm tespit edilen abonelikleri kontrol paneli sekmesinde görebilirsin.
+                {t("subscriptionForm.transferredDescription")}
               </p>
               <button
                 type="button"
                 onClick={() => navigate("/")}
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
               >
-                Kontrol paneline git
+                {t("common.goToDashboard")}
               </button>
             </div>
           </div>
         ) : (
           <div className="mt-6 rounded-[28px] border border-dashed border-slate-200 bg-slate-50 px-5 py-6 text-sm leading-6 text-slate-500">
-            Sağlayıcıyı bağladıktan sonra bulunan abonelikler doğrudan kontrol paneline taşınır.
+            {t("subscriptionForm.defaultHint")}
           </div>
         )}
 

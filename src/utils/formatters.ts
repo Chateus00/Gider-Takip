@@ -1,5 +1,8 @@
+import { getLocale } from "@/contexts/I18nContext";
+import { getStoredLanguage } from "@/i18n/translations";
+
 export function formatCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("tr-TR", {
+  return new Intl.NumberFormat(getLocale(getStoredLanguage()), {
     style: "currency",
     currency,
     maximumFractionDigits: 2,
@@ -7,7 +10,7 @@ export function formatCurrency(amount: number, currency: string) {
 }
 
 export function formatDate(date: string) {
-  return new Intl.DateTimeFormat("tr-TR", {
+  return new Intl.DateTimeFormat(getLocale(getStoredLanguage()), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -15,5 +18,8 @@ export function formatDate(date: string) {
 }
 
 export function formatPercent(value: number) {
-  return `%${value.toFixed(1)}`;
+  return new Intl.NumberFormat(getLocale(getStoredLanguage()), {
+    style: "percent",
+    maximumFractionDigits: 1,
+  }).format(value / 100);
 }

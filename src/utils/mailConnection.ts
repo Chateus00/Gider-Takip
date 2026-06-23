@@ -1,5 +1,6 @@
 import type { Session } from "@supabase/supabase-js";
 import type { EmailAnalysisResponse, EmailConnection, EmailProvider } from "../../shared/subscriptions";
+import { translateText } from "@/i18n/translations";
 import { supabase } from "@/lib/supabase";
 import { extractSubscriptionsFromMessages, type MailMessageCandidate } from "@/utils/mailAnalysis";
 
@@ -38,9 +39,7 @@ async function getSessionWithProviderToken(session: Session | null) {
   }
 
   if (!data.session?.provider_token) {
-    throw new Error(
-      "Mail erişim anahtarı bulunamadı. Google/Microsoft izin ekranını tekrar tamamlayıp yeniden dene."
-    );
+    throw new Error(translateText("subscriptionForm.errors.callbackFailed"));
   }
 
   return data.session;
@@ -53,7 +52,7 @@ async function readJsonResponse(response: Response) {
     const message =
       (payload as { error?: { message?: string }; message?: string }).error?.message ||
       (payload as { message?: string }).message ||
-      "Mail kutusu okunamadı.";
+      translateText("subscriptionForm.errors.analyzeFailed");
 
     throw new Error(message);
   }
@@ -241,7 +240,7 @@ export async function analyzeLinkedMailbox(
   const email = activeSession.user?.email;
 
   if (!email) {
-    throw new Error("Kullanıcı e-postası bulunamadı.");
+    throw new Error(translateText("subscriptionForm.errors.signInRequired"));
   }
 
   const messages =

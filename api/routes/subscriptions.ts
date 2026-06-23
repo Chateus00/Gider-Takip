@@ -4,8 +4,9 @@ import {
   getDashboardData,
   getPredictionById,
   getSubscriptionById,
+  updateSubscription,
 } from "../data/subscriptions.js";
-import type { CreateSubscriptionInput } from "../../shared/subscriptions.js";
+import type { CreateSubscriptionInput, UpdateSubscriptionInput } from "../../shared/subscriptions.js";
 
 const router = Router();
 
@@ -53,6 +54,17 @@ router.post("/", (req: Request<unknown, unknown, CreateSubscriptionInput>, res: 
 
   const created = createSubscription(body);
   res.status(201).json(created);
+});
+
+router.patch("/:id", (req: Request<{ id: string }, unknown, UpdateSubscriptionInput>, res: Response) => {
+  const updated = updateSubscription(req.params.id, req.body ?? {});
+
+  if (!updated) {
+    res.status(404).json({ message: "Abonelik bulunamadi." });
+    return;
+  }
+
+  res.json(updated);
 });
 
 export default router;

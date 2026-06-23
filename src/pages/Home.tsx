@@ -5,11 +5,13 @@ import type { DashboardResponse, SubscriptionItem } from "../../shared/subscript
 import DashboardHero from "@/components/DashboardHero";
 import ForecastPanel from "@/components/ForecastPanel";
 import SubscriptionCard from "@/components/SubscriptionCard";
+import { useI18n } from "@/contexts/I18nContext";
 import { fetchDashboard, fetchPrediction } from "@/utils/api";
 
 type FilterKey = "all" | "monthly" | "watch" | "yearly";
 
 export default function Home() {
+  const { t } = useI18n();
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<FilterKey>("all");
   const [prediction, setPrediction] = useState<Awaited<ReturnType<typeof fetchPrediction>> | null>(null);
@@ -28,12 +30,12 @@ export default function Home() {
           setPrediction(null);
         }
       } catch (loadError) {
-        setError(loadError instanceof Error ? loadError.message : "Veriler yüklenemedi.");
+        setError(loadError instanceof Error ? loadError.message : t("home.loadError"));
       }
     }
 
     loadData();
-  }, []);
+  }, [t]);
 
   const filteredItems = useMemo(() => {
     if (!dashboard) {
@@ -58,16 +60,16 @@ export default function Home() {
     return (
       <div className="flex min-h-[50vh] items-center justify-center gap-3 text-slate-500">
         <LoaderCircle className="h-5 w-5 animate-spin" />
-        Kontrol paneli yükleniyor...
+        {t("home.loading")}
       </div>
     );
   }
 
   const filterList: Array<{ key: FilterKey; label: string }> = [
-    { key: "all", label: "Tüm servisler" },
-    { key: "monthly", label: "Aylık" },
-    { key: "watch", label: "Yakında zam" },
-    { key: "yearly", label: "Yıllık" },
+    { key: "all", label: t("home.filters.all") },
+    { key: "monthly", label: t("home.filters.monthly") },
+    { key: "watch", label: t("home.filters.watch") },
+    { key: "yearly", label: t("home.filters.yearly") },
   ];
   const hasConnectedMail = dashboard.connections.length > 0;
 
@@ -81,12 +83,12 @@ export default function Home() {
             <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Mail analizi</p>
+                  <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{t("home.mailAnalysis")}</p>
                   <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
-                    Aboneliklerin burada görünür
+                    {t("home.subscriptionsVisible")}
                   </h2>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                    İlk mail hesabını bağlayıp taramayı başlattığında, bulduklarını onaylayıp listeye ekleyebilirsin.
+                    {t("home.firstConnectHint")}
                   </p>
                 </div>
                 <Link
@@ -94,12 +96,12 @@ export default function Home() {
                   className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
                 >
                   <Mail className="h-4 w-4" />
-                  Mail hesabını bağla
+                  {t("common.connectMailAccount")}
                 </Link>
               </div>
 
               <div className="mt-5 rounded-[24px] border border-dashed border-emerald-100 bg-emerald-50/60 px-4 py-5 text-sm leading-6 text-slate-600">
-                Henüz bağlı bir mail hesabı yok.
+                {t("home.noConnectedMail")}
               </div>
             </section>
           ) : null}
@@ -110,8 +112,8 @@ export default function Home() {
               <section className="space-y-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Abonelik listesi</p>
-                    <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">Aboneliklerin</h2>
+                    <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{t("home.listTitle")}</p>
+                    <h2 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">{t("home.yourSubscriptions")}</h2>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {filterList.map((filter) => (
@@ -145,7 +147,7 @@ export default function Home() {
             </>
           ) : (
             <section className="rounded-[32px] border border-emerald-100 bg-white/90 p-6 text-slate-500 shadow-[0_18px_50px_rgba(6,78,59,0.10)]">
-              Henüz abonelik bulunmadı. Mail taraması yaptıktan sonra burada görünecek.
+              {t("home.noSubscriptionsYet")}
             </section>
           )}
         </div>

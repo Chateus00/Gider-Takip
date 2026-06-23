@@ -11,12 +11,15 @@ import SubscriptionDetail from "@/pages/SubscriptionDetail";
 import Terms from "@/pages/Terms";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
+import { I18nProvider, useI18n } from "@/contexts/I18nContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function AppShell() {
   const { isLoading, session, signOut } = useAuth();
+  const { t } = useI18n();
   const location = useLocation();
   const [signOutError, setSignOutError] = useState("");
-  const userEmail = session?.user.email ?? "Misafir kullanıcı";
+  const userEmail = session?.user.email ?? t("common.guestUser");
   const isAuthPage = location.pathname === "/auth";
 
   async function handleSignOut() {
@@ -24,7 +27,7 @@ function AppShell() {
       setSignOutError("");
       await signOut();
     } catch (error) {
-      setSignOutError(error instanceof Error ? error.message : "Çıkış yapılamadı.");
+      setSignOutError(error instanceof Error ? error.message : t("app.signOutFailed"));
     }
   }
 
@@ -34,8 +37,8 @@ function AppShell() {
         {isAuthPage ? null : (
           <header className="mb-8 flex flex-col gap-4 rounded-[32px] border border-emerald-100 bg-white/80 px-5 py-4 shadow-[0_20px_60px_rgba(6,78,59,0.10)] backdrop-blur md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Abonelik takip uygulaması</p>
-              <h1 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">Gider Takip</h1>
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{t("app.title")}</p>
+              <h1 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">{t("common.appName")}</h1>
             </div>
 
             <nav className="flex flex-wrap items-center gap-2">
@@ -51,7 +54,7 @@ function AppShell() {
                     }
                   >
                     <LayoutDashboard className="h-4 w-4" />
-                    Kontrol paneli
+                    {t("common.dashboard")}
                   </NavLink>
                   <NavLink
                     to="/abonelik/yeni"
@@ -62,17 +65,18 @@ function AppShell() {
                     }
                   >
                     <Plus className="h-4 w-4" />
-                    Mail bağla
+                    {t("common.connectMail")}
                   </NavLink>
                 </>
               ) : null}
             </nav>
 
             <div className="flex flex-col items-start gap-2 md:items-end">
+              <LanguageSwitcher compact />
               {isLoading ? (
                 <div className="inline-flex items-center gap-3 rounded-full bg-slate-100 px-4 py-2 text-sm text-slate-600">
                   <LockKeyhole className="h-4 w-4" />
-                    Oturum kontrol ediliyor
+                  {t("common.sessionChecking")}
                 </div>
               ) : session ? (
                 <div className="flex flex-wrap items-center gap-2">
@@ -86,7 +90,7 @@ function AppShell() {
                     className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-emerald-700 hover:text-emerald-800"
                   >
                     <LogOut className="h-4 w-4" />
-                    Çıkış yap
+                    {t("common.signOut")}
                   </button>
                 </div>
               ) : null}
@@ -132,16 +136,17 @@ function AppShell() {
 
         <footer className="border-t border-emerald-100 px-2 py-6 text-sm text-slate-500">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p>Gider Takip, kullanıcı hesapları ve mail bağlama özelliği için gerekli verileri işler.</p>
+            <p>{t("app.footerSummary")}</p>
             <div className="flex flex-wrap items-center gap-4">
+              <LanguageSwitcher compact />
               <NavLink to="/hakkinda" className="transition hover:text-slate-950">
-                Uygulama hakkında
+                {t("common.appAbout")}
               </NavLink>
               <NavLink to="/privacy" className="transition hover:text-slate-950">
-                Gizlilik politikası
+                {t("common.privacy")}
               </NavLink>
               <NavLink to="/terms" className="transition hover:text-slate-950">
-                Kullanım koşulları
+                {t("common.terms")}
               </NavLink>
             </div>
           </div>
@@ -153,8 +158,10 @@ function AppShell() {
 
 export default function App() {
   return (
-    <Router>
-      <AppShell />
-    </Router>
+    <I18nProvider>
+      <Router>
+        <AppShell />
+      </Router>
+    </I18nProvider>
   );
 }

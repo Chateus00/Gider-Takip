@@ -1,5 +1,6 @@
 import { ArrowUpRight, CalendarClock, Coins, Sparkles, Wallet } from "lucide-react";
 import type { DashboardSummary } from "../../shared/subscriptions";
+import { useI18n } from "@/contexts/I18nContext";
 import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
 
 interface DashboardHeroProps {
@@ -7,6 +8,7 @@ interface DashboardHeroProps {
 }
 
 export default function DashboardHero({ summary }: DashboardHeroProps) {
+  const { t } = useI18n();
   const increasePercent =
     summary.monthlyTotal > 0
       ? (summary.predictedMonthlyIncrease / summary.monthlyTotal) * 100
@@ -14,22 +16,22 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
 
   const stats = [
     {
-      label: "Aktif abonelik",
-      value: `${summary.activeCount} servis`,
+      label: t("hero.stats.active"),
+      value: t("hero.stats.activeValue", { count: summary.activeCount }),
       icon: Wallet,
     },
     {
-      label: "Aylık yük",
+      label: t("hero.stats.monthly"),
       value: formatCurrency(summary.monthlyTotal, "TRY"),
       icon: Coins,
     },
     {
-      label: "Yaklaşan ödeme",
+      label: t("hero.stats.upcoming"),
       value: `${formatCurrency(summary.upcomingAmount, "TRY")} · ${formatDate(summary.upcomingDate)}`,
       icon: CalendarClock,
     },
     {
-      label: "Tahmini artış",
+      label: t("hero.stats.increase"),
       value: `${formatPercent(increasePercent)} · ${formatCurrency(summary.predictedMonthlyIncrease, "TRY")}`,
       icon: Sparkles,
     },
@@ -42,14 +44,14 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
         <div className="space-y-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-emerald-200">
             <Sparkles className="h-3.5 w-3.5" />
-            Gider Takip
+            {t("common.appName")}
           </div>
           <div className="space-y-3">
             <h1 className="max-w-2xl font-['Fraunces',serif] text-4xl leading-tight text-white md:text-5xl">
-              Tüm aboneliklerini tek bakışta gör, zamları erken yakala.
+              {t("hero.title")}
             </h1>
             <p className="max-w-2xl text-sm text-slate-300 md:text-base">
-              Bu ay ne ödeyeceğini ve yaklaşan artış risklerini tek ekranda takip et.
+              {t("hero.description")}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -57,11 +59,11 @@ export default function DashboardHero({ summary }: DashboardHeroProps) {
               href="/abonelik/yeni"
               className="inline-flex items-center gap-2 rounded-full bg-emerald-300 px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-200"
             >
-              Mail hesabını bağla
+              {t("common.connectMailAccount")}
               <ArrowUpRight className="h-4 w-4" />
             </a>
             <div className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-200">
-              Yıllık toplam {formatCurrency(summary.yearlyTotal, "TRY")}
+              {t("hero.yearlyTotal", { value: formatCurrency(summary.yearlyTotal, "TRY") })}
             </div>
           </div>
         </div>

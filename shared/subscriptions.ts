@@ -148,3 +148,7 @@ export interface CreateSubscriptionInput {
   detectionMethod?: DetectionMethod;
   detectionConfidence?: number;
 }
+
+export interface UpdateSubscriptionInput {
+  reminderDaysBefore?: number;
+}

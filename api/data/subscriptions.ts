@@ -13,6 +13,7 @@ import type {
   IntakeSimulationResponse,
   PredictionResponse,
   SubscriptionItem,
+  UpdateSubscriptionInput,
 } from "../../shared/subscriptions.js";
 
 const imageBase =
@@ -398,4 +399,18 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
 
   mySubscriptions.unshift(newItem);
   return newItem;
+}
+
+export function updateSubscription(id: string, input: UpdateSubscriptionInput) {
+  const item = mySubscriptions.find((subscription) => subscription.id === id);
+
+  if (!item) {
+    return null;
+  }
+
+  if (typeof input.reminderDaysBefore === "number") {
+    item.reminderDaysBefore = input.reminderDaysBefore;
+  }
+
+  return item;
 }

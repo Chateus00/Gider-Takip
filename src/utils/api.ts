@@ -10,7 +10,9 @@ import type {
   IntakeSimulationResponse,
   PredictionResponse,
   SubscriptionItem,
+  UpdateSubscriptionInput,
 } from "../../shared/subscriptions";
+import { translateText } from "@/i18n/translations";
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").trim().replace(/\/+$/, "");
 const subscriptionsStorageKey = "gider-takip.dashboard-subscriptions";
@@ -71,17 +73,17 @@ function buildSummary(items: SubscriptionItem[]): DashboardSummary {
 function createPredictedAmounts(amount: number) {
   return [
     {
-      month: "Sonraki ay",
+      month: translateText("api.predictionMonths.next"),
       amount: Number((amount * 1.054).toFixed(2)),
       increaseRate: 5.4,
     },
     {
-      month: "İki ay sonra",
+      month: translateText("api.predictionMonths.second"),
       amount: Number((amount * 1.081).toFixed(2)),
       increaseRate: 2.6,
     },
     {
-      month: "Üç ay sonra",
+      month: translateText("api.predictionMonths.third"),
       amount: Number((amount * 1.097).toFixed(2)),
       increaseRate: 1.5,
     },
@@ -96,10 +98,13 @@ function buildPrediction(item: SubscriptionItem): PredictionResponse {
     predictedAmounts: item.predictedAmounts,
     notes: [
       item.officialNextAmount
-        ? "Resmi sonraki ödeme açıklandığı için ilk satır doğrudan resmi veriyle gösterildi."
-        : "Resmi sonraki ödeme yok; ilk satır tahmini veri olarak sunuldu.",
-      "Tahmin motoru geçmiş ödeme ritmi, kategori hareketi ve dönemsel fiyat güncellemelerini kullanır.",
-      `Bu abonelik ${item.detectionMethod} yöntemi ile %${Math.round(item.detectionConfidence * 100)} güvenle algılandı.`,
+        ? translateText("api.predictionNotes.officialKnown")
+        : translateText("api.predictionNotes.officialUnknown"),
+      translateText("api.predictionNotes.engine"),
+      translateText("api.predictionNotes.detected", {
+        method: translateText(`subscription.detection.${item.detectionMethod}`),
+        confidence: Math.round(item.detectionConfidence * 100),
+      }),
     ],
   };
 }
@@ -186,11 +191,11 @@ function buildLocalSubscription(input: CreateSubscriptionInput): SubscriptionIte
     detectionConfidence: input.detectionConfidence ?? 0.9,
     notes:
       input.notes ||
-      "Mail analizi ile bulunan ve kullanıcı tarafından onaylanarak Aboneliklerim listesine eklenen kayıt.",
+      translateText("api.localRecord"),
     paymentHistory: [
       {
         id: `${slugify(input.name)}-predicted`,
-        label: "Sonraki ödeme tahmini",
+        label: translateText("api.predictedPaymentLabel"),
         amount: Number((input.currentAmount * 1.04).toFixed(2)),
         paidAt: input.nextPaymentDate,
         source: "predicted",
@@ -216,6 +221,21 @@ function persistSubscription(item: SubscriptionItem) {
   return item;
 }
 
+function updatePersistedSubscription(id: string, input: UpdateSubscriptionInput) {
+  const updatedItems = getStoredSubscriptions().map((item) =>
+    item.id === id
+      ? {
+          ...item,
+          ...(typeof input.reminderDaysBefore === "number"
+            ? { reminderDaysBefore: input.reminderDaysBefore }
+            : {}),
+        }
+      : item
+  );
+  setStoredSubscriptions(updatedItems);
+  return updatedItems.find((item) => item.id === id) ?? null;
+}
+
 function persistConnection(connection: EmailConnection) {
   const merged = mergeConnections([connection], getStoredConnections());
   setStoredConnections(merged);
@@ -224,8 +244,8 @@ function persistConnection(connection: EmailConnection) {
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const payload = await response.json().catch(() => ({ message: "Bir hata oluştu." }));
-    throw new Error(payload.message ?? "Bir hata oluştu.");
+    const payload = await response.json().catch(() => ({ message: translateText("auth.actionFailed") }));
+    throw new Error(payload.message ?? translateText("auth.actionFailed"));
   }
 
   return response.json() as Promise<T>;
@@ -301,6 +321,29 @@ export async function createSubscription(input: CreateSubscriptionInput) {
   }
 }
 
+export async function updateSubscription(id: string, input: UpdateSubscriptionInput) {
+  try {
+    const response = await fetch(buildApiUrl(`/api/subscriptions/${id}`), {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+
+    const updated = await handleResponse<SubscriptionItem>(response);
+    return persistSubscription(updated);
+  } catch {
+    const updated = updatePersistedSubscription(id, input);
+
+    if (!updated) {
+      throw new Error(translateText("subscription.reminderUpdateFailed"));
+    }
+
+    return updated;
+  }
+}
+
 export async function fetchIntakeMethods() {
   const response = await fetch(buildApiUrl("/api/intake/methods"));
   return handleResponse<IntakeMethod[]>(response);
@@ -340,7 +383,7 @@ export async function connectEmail(input: EmailConnectInput) {
   } catch {
     return {
       connection: persistConnection(buildLocalConnection(input)),
-      summary: "Mail hesabı bağlandı.",
+      summary: translateText("common.connectMailAccount"),
       preview: [],
     };
   }

@@ -10,7 +10,7 @@ describe("formatters", () => {
     expect(formatDate("2026-06-24")).toContain("2026");
   });
 
-  it("formats percentage with one decimal place", () => {
-    expect(formatPercent(8.73)).toBe("%8.7");
+  it("formats percentage with locale-aware decimal separator", () => {
+    expect(formatPercent(8.73)).toBe("%8,7");
   });
 });

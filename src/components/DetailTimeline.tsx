@@ -1,22 +1,24 @@
 import type { PaymentEvent } from "../../shared/subscriptions";
+import { useI18n } from "@/contexts/I18nContext";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 
 interface DetailTimelineProps {
   items: PaymentEvent[];
 }
 
-const sourceMap = {
-  manual: "Manuel",
-  official: "Resmi",
-  predicted: "Tahmini",
-};
-
 export default function DetailTimeline({ items }: DetailTimelineProps) {
+  const { t } = useI18n();
+  const sourceMap = {
+    manual: t("detailTimeline.sources.manual"),
+    official: t("detailTimeline.sources.official"),
+    predicted: t("detailTimeline.sources.predicted"),
+  } as const;
+
   return (
     <section className="rounded-[32px] border border-slate-200/70 bg-white/80 p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
-      <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Odeme gecmisi</p>
+      <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{t("detailTimeline.title")}</p>
       <h3 className="mt-2 font-['Fraunces',serif] text-3xl text-slate-950">
-        Gecmis ve tahmini odeme zaman cizelgesi
+        {t("detailTimeline.heading")}
       </h3>
 
       <div className="mt-6 space-y-4">

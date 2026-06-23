@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { translateText } from "@/i18n/translations";
 
 interface AuthContextValue {
   session: Session | null;
@@ -67,10 +68,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         if (!data.session) {
-          return "Kayıt oluşturuldu. E-posta doğrulama bağlantısını kontrol et.";
+          return translateText("auth.signUpCreated");
         }
 
-        return "Kayıt başarıyla tamamlandı.";
+        return translateText("auth.signUpCompleted");
       },
       async signIn(email: string, password: string) {
         const { error } = await supabase.auth.signInWithPassword({
