@@ -158,7 +158,6 @@ function AppShell() {
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p>{t("app.footerSummary")}</p>
             <div className="flex flex-wrap items-center gap-4">
-              <LanguageSwitcher compact />
               <NavLink to="/hakkinda" className="transition hover:text-slate-950">
                 {t("common.appAbout")}
               </NavLink>
