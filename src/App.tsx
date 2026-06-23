@@ -99,10 +99,19 @@ function AppShell() {
                 </button>
               </div>
             ) : (
-              <div className="inline-flex items-center gap-3 rounded-full bg-emerald-50 px-4 py-2 text-sm text-emerald-700">
+              <NavLink
+                to="/auth?mode=signup"
+                className={({ isActive }) =>
+                  `inline-flex items-center gap-3 rounded-full px-4 py-2 text-sm transition ${
+                    isActive
+                      ? "bg-emerald-700 text-white"
+                      : "bg-white text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-50"
+                  }`
+                }
+              >
                 <LockKeyhole className="h-4 w-4" />
-                Hesabınla giriş yap
-              </div>
+                Kayıt ol
+              </NavLink>
             )}
             {signOutError ? <p className="text-sm text-rose-600">{signOutError}</p> : null}
           </div>

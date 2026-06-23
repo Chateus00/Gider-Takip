@@ -9,7 +9,10 @@ export default function AuthPanel() {
   const { signIn, signInWithGoogle, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [mode, setMode] = useState<AuthMode>("signin");
+  const [mode, setMode] = useState<AuthMode>(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("mode") === "signup" ? "signup" : "signin";
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,8 +83,8 @@ export default function AuthPanel() {
               {[
                 "Tek ekranda aylık toplamını gör.",
                 "Yaklaşan ödemeleri önceden fark et.",
-                "Mail kutundan aboneliklerini hızlıca bul.",
-                "Gereksiz harcamaları daha erken fark et.",
+                "Zevkine uygun abonelik önerilerinden haberdar ol.",
+                "Gelecekte abonelik ücretlerine yapılacak zam tahminlerini öğren.",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <span className="mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-300/20 text-emerald-200">
