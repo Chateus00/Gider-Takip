@@ -1,4 +1,33 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="32" height="32" fill="#0A0B0D"/>
-<path d="M26.6677 23.7149H8.38057V20.6496H5.33301V8.38159H26.6677V23.7149ZM8.38057 20.6496H23.6201V11.4482H8.38057V20.6496ZM16.0011 16.0021L13.8461 18.1705L11.6913 16.0021L13.8461 13.8337L16.0011 16.0021ZM22.0963 16.0008L19.9414 18.1691L17.7865 16.0008L19.9414 13.8324L22.0963 16.0008Z" fill="#32F08C"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14222B"/>
+      <stop offset="1" stop-color="#071015"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="15" y1="16" x2="52" y2="49" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#89F5D8"/>
+      <stop offset="1" stop-color="#2AAE91"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="18" y1="42" x2="50" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#238E76"/>
+      <stop offset="1" stop-color="#9AFFF0"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="28" y1="20" x2="39" y2="37" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6E5A5"/>
+      <stop offset="1" stop-color="#D7B55F"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#bg)"/>
+  <path
+    d="M48.6 18.8C44.7 14.4 39 12 32.8 12C22 12 13.2 20.8 13.2 31.6C13.2 37.5 15.8 42.9 20 46.6L23.3 42.8C20 39.9 18 35.9 18 31.6C18 23.4 24.6 16.8 32.8 16.8C37.5 16.8 41.8 19 44.6 22.4L41.4 25.1H51.6V15.2L48.6 18.8Z"
+    fill="url(#ring)"
+  />
+  <path
+    d="M31.1 20.2H34.7V23C37.4 23.6 39.2 25.5 39.7 28.4H35.6C35.2 27 34.1 26.2 32.5 26.2C30.8 26.2 29.7 27.1 29.7 28.4C29.7 29.8 30.8 30.4 33.7 31.1C37.6 32.1 40.1 33.6 40.1 37.4C40.1 40.5 38.1 42.9 34.7 43.6V46.3H31.1V43.6C27.5 42.9 25.2 40.4 24.8 36.9H28.9C29.4 38.9 30.7 39.9 32.8 39.9C34.8 39.9 36 38.9 36 37.4C36 35.7 34.5 35.1 31.8 34.4C28 33.4 25.6 31.9 25.6 28.3C25.6 25.3 27.7 23 31.1 22.3V20.2Z"
+    fill="url(#accent)"
+  />
+  <path
+    d="M16 40.6L27.2 29.4L33 35.2L46.3 21.9L49.7 25.3L33 42L27.2 36.2L19.4 44H29.6V48.8H11.2V30.4H16V40.6Z"
+    fill="url(#arrow)"
+  />
 </svg>
