@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { LoaderCircle, LogIn, UserPlus } from "lucide-react";
+import { Check, LoaderCircle, LogIn, UserPlus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -58,22 +58,39 @@ export default function AuthPanel() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="rounded-[32px] border border-emerald-200/50 bg-[linear-gradient(180deg,#052e16_0%,#064e3b_100%)] p-6 text-white shadow-[0_26px_70px_rgba(6,78,59,0.35)]">
-        <div className="inline-flex rounded-full border border-emerald-200/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.24em] text-emerald-200">
-          Gider Takip
-        </div>
-        <h1 className="mt-4 font-['Fraunces',serif] text-4xl leading-tight">
-          Aboneliklerini tek yerde gör, gereksiz ödemeleri kaçırma.
-        </h1>
-        <p className="mt-4 text-sm leading-6 text-slate-300">
-          Giriş yaptıktan sonra hesabını bağlayıp düzenli ödemelerini tek ekranda takip edebilirsin.
-        </p>
+      <div className="flex rounded-[32px] border border-emerald-200/50 bg-[linear-gradient(180deg,#052e16_0%,#064e3b_100%)] p-6 text-white shadow-[0_26px_70px_rgba(6,78,59,0.35)]">
+        <div className="flex w-full flex-col">
+          <div>
+            <div className="inline-flex rounded-full border border-emerald-200/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.24em] text-emerald-200">
+              Gider Takip
+            </div>
+            <h1 className="mt-4 font-['Fraunces',serif] text-4xl leading-tight">
+              Aboneliklerini tek yerde gör, gereksiz ödemelerden kaçın!
+            </h1>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300">
+              Giriş yaptıktan sonra hesabını bağlayıp düzenli ödemelerini tek ekranda takip edebilirsin.
+            </p>
+          </div>
 
-        <div className="mt-8 rounded-[24px] border border-white/10 bg-white/5 p-5">
-          <div className="space-y-3 text-sm leading-6 text-emerald-50">
-            <p>Tek ekranda aylık toplamını gör.</p>
-            <p>Yaklaşan ödemeleri önceden fark et.</p>
-            <p>Mail kutundan aboneliklerini hızlıca bul.</p>
+          <div className="mt-8 min-h-[320px] rounded-[28px] border border-white/10 bg-white/10 p-7 md:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-200">
+              Sana ne sağlar?
+            </p>
+            <div className="mt-5 space-y-5 text-lg leading-8 text-emerald-50">
+              {[
+                "Tek ekranda aylık toplamını gör.",
+                "Yaklaşan ödemeleri önceden fark et.",
+                "Mail kutundan aboneliklerini hızlıca bul.",
+                "Gereksiz harcamaları daha erken fark et.",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-3">
+                  <span className="mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-300/20 text-emerald-200">
+                    <Check className="h-4 w-4" />
+                  </span>
+                  <p>{item}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
