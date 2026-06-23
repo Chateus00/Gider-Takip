@@ -12,9 +12,16 @@ interface ReminderSelectProps {
 
 const reminderOptions = [0, 1, 3, 7, 14] as const;
 
-function getReminderOptionLabel(option: number, t: (key: string) => string) {
+function getReminderOptionLabel(
+  option: number,
+  t: (key: string, values?: Record<string, string | number>) => string
+) {
   if (option === 0) {
     return t("reminder.options.off");
+  }
+
+  if (!reminderOptions.includes(option as (typeof reminderOptions)[number])) {
+    return t("reminder.options.customValue", { count: option });
   }
 
   return t(
@@ -37,7 +44,17 @@ export default function ReminderSelect({
 }: ReminderSelectProps) {
   const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customValue, setCustomValue] = useState(value > 0 ? String(value) : "5");
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const isPresetValue = reminderOptions.includes(value as (typeof reminderOptions)[number]);
+
+  useEffect(() => {
+    if (!isPresetValue && value > 0) {
+      setCustomValue(String(value));
+      setIsCustomMode(true);
+    }
+  }, [isPresetValue, value]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -74,7 +91,20 @@ export default function ReminderSelect({
 
   async function handleSelect(option: number) {
     setIsOpen(false);
+    setIsCustomMode(false);
     await onChange(option);
+  }
+
+  async function handleCustomSubmit() {
+    const parsed = Number(customValue);
+
+    if (!Number.isFinite(parsed) || parsed < 1) {
+      return;
+    }
+
+    setIsOpen(false);
+    setIsCustomMode(false);
+    await onChange(Math.min(Math.round(parsed), 365));
   }
 
   return (
@@ -118,7 +148,46 @@ export default function ReminderSelect({
                 </button>
               );
             })}
+            <button
+              type="button"
+              onClick={() => setIsCustomMode((current) => !current)}
+              className={`flex w-full items-center justify-between rounded-[16px] px-4 py-3 text-left text-sm transition ${
+                !isPresetValue && value > 0 ? selectedClassName : optionHoverClassName
+              }`}
+            >
+              <span>
+                {!isPresetValue && value > 0
+                  ? t("reminder.options.customValue", { count: value })
+                  : t("reminder.options.custom")}
+              </span>
+              {!isPresetValue && value > 0 ? <Check className="h-4 w-4" /> : null}
+            </button>
           </div>
+          {isCustomMode ? (
+            <div className="mt-2 rounded-[18px] border border-emerald-100/70 bg-emerald-50/60 p-3">
+              <label className="block">
+                <span className={`mb-2 block text-xs font-medium ${mutedClassName}`}>
+                  {t("reminder.customLabel")}
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  max={365}
+                  value={customValue}
+                  onChange={(event) => setCustomValue(event.target.value)}
+                  placeholder={t("reminder.customPlaceholder")}
+                  className="w-full rounded-[14px] border border-emerald-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-emerald-500"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => void handleCustomSubmit()}
+                className="mt-3 inline-flex rounded-full bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-800"
+              >
+                {t("reminder.applyCustom")}
+              </button>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { BrowserRouter as Router, NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { LayoutDashboard, LockKeyhole, LogOut, Plus, UserCircle2 } from "lucide-react";
+import { Compass, LayoutDashboard, LockKeyhole, LogOut, Plus, UserCircle2 } from "lucide-react";
 import Auth from "@/pages/Auth";
 import About from "@/pages/About";
 import Home from "@/pages/Home";
 import MailCallback from "@/pages/MailCallback";
 import NewSubscription from "@/pages/NewSubscription";
 import Privacy from "@/pages/Privacy";
+import Recommendations from "@/pages/Recommendations";
 import SubscriptionDetail from "@/pages/SubscriptionDetail";
 import Terms from "@/pages/Terms";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -67,6 +68,17 @@ function AppShell() {
                     <Plus className="h-4 w-4" />
                     {t("common.connectMail")}
                   </NavLink>
+                  <NavLink
+                    to="/oneriler"
+                    className={({ isActive }) =>
+                      `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
+                        isActive ? "bg-emerald-700 text-white" : "bg-emerald-50 text-emerald-900 hover:bg-emerald-100"
+                      }`
+                    }
+                  >
+                    <Compass className="h-4 w-4" />
+                    {t("common.recommendationsTab")}
+                  </NavLink>
                 </>
               ) : null}
             </nav>
@@ -119,6 +131,14 @@ function AppShell() {
               element={
                 <ProtectedRoute>
                   <NewSubscription />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/oneriler"
+              element={
+                <ProtectedRoute>
+                  <Recommendations />
                 </ProtectedRoute>
               }
             />

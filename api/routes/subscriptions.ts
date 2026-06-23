@@ -18,7 +18,7 @@ router.get("/:id", (req: Request, res: Response) => {
   const item = getSubscriptionById(req.params.id);
 
   if (!item) {
-    res.status(404).json({ message: "Abonelik bulunamadi." });
+    res.status(404).json({ message: "Abonelik bulunamadı." });
     return;
   }
 
@@ -29,7 +29,7 @@ router.get("/:id/prediction", (req: Request, res: Response) => {
   const prediction = getPredictionById(req.params.id);
 
   if (!prediction) {
-    res.status(404).json({ message: "Tahmin verisi bulunamadi." });
+    res.status(404).json({ message: "Tahmin verisi bulunamadı." });
     return;
   }
 
@@ -60,7 +60,7 @@ router.patch("/:id", (req: Request<{ id: string }, unknown, UpdateSubscriptionIn
   const updated = updateSubscription(req.params.id, req.body ?? {});
 
   if (!updated) {
-    res.status(404).json({ message: "Abonelik bulunamadi." });
+    res.status(404).json({ message: "Abonelik bulunamadı." });
     return;
   }
 

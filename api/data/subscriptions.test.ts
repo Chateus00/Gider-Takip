@@ -65,7 +65,7 @@ describe("intake simulations", () => {
   it("excludes subscribed apps from the discover catalog", () => {
     createSubscription({
       name: "Spotify Premium",
-      category: "Muzik",
+      category: "Müzik",
       logoUrl: "https://example.com/spotify.png",
       currentAmount: 99,
       currency: "TRY",

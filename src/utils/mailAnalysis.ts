@@ -39,7 +39,7 @@ const serviceCatalog: ServiceDefinition[] = [
   {
     matchers: [/spotify/i],
     name: "Spotify Premium",
-    category: "Muzik",
+    category: "Müzik",
     defaultAmount: 99,
     defaultCurrency: "TRY",
     defaultCycle: "monthly",
@@ -93,7 +93,7 @@ const serviceCatalog: ServiceDefinition[] = [
   {
     matchers: [/chatgpt/i, /openai/i],
     name: "ChatGPT Plus",
-    category: "Yapay zeka",
+    category: "Yapay zekâ",
     defaultAmount: 20,
     defaultCurrency: "USD",
     defaultCycle: "monthly",
@@ -193,7 +193,8 @@ function inferBillingCycle(value: string, fallback: BillingCycle): BillingCycle 
     normalized.includes("yearly") ||
     normalized.includes("annual") ||
     normalized.includes("annually") ||
-    normalized.includes("yillik")
+    normalized.includes("yillik") ||
+    normalized.includes("yıllık")
   ) {
     return "yearly";
   }

@@ -3,6 +3,7 @@ import type {
   DashboardResponse,
   DashboardSummary,
   DetectionMethod,
+  DiscoverResponse,
   EmailConnection,
   EmailAnalysisResponse,
   EmailConnectInput,
@@ -388,4 +389,15 @@ export async function connectEmail(input: EmailConnectInput) {
       preview: [],
     };
   }
+}
+
+export async function fetchDiscover(query = "") {
+  const search = new URLSearchParams();
+
+  if (query.trim()) {
+    search.set("q", query.trim());
+  }
+
+  const response = await fetch(buildApiUrl(`/api/discover${search.toString() ? `?${search.toString()}` : ""}`));
+  return handleResponse<DiscoverResponse>(response);
 }

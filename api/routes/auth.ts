@@ -11,7 +11,7 @@ const router = Router()
  * POST /api/auth/register
  */
 router.post('/register', async (_req: Request, res: Response): Promise<void> => {
-  res.status(501).json({ message: 'Kayit akisi demo surumde henuz hazir degil.' })
+  res.status(501).json({ message: 'Kayıt akışı demo sürümde henüz hazır değil.' })
 })
 
 /**
@@ -19,7 +19,7 @@ router.post('/register', async (_req: Request, res: Response): Promise<void> => 
  * POST /api/auth/login
  */
 router.post('/login', async (_req: Request, res: Response): Promise<void> => {
-  res.status(501).json({ message: 'Giris akisi demo surumde henuz hazir degil.' })
+  res.status(501).json({ message: 'Giriş akışı demo sürümde henüz hazır değil.' })
 })
 
 /**
@@ -27,7 +27,7 @@ router.post('/login', async (_req: Request, res: Response): Promise<void> => {
  * POST /api/auth/logout
  */
 router.post('/logout', async (_req: Request, res: Response): Promise<void> => {
-  res.status(200).json({ message: 'Cikis demo surumde yerel olarak tamamlandi.' })
+  res.status(200).json({ message: 'Çıkış demo sürümde yerel olarak tamamlandı.' })
 })
 
 export default router

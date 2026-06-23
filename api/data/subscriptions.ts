@@ -28,27 +28,27 @@ const trackingMethods: IntakeMethod[] = [
     id: "email",
     title: "E-posta taramasi",
     description:
-      "Google veya Outlook hesabi baglandiginda fatura ve odeme mailleri taranir, sadece kullaniciya ait abonelikler cikarilir.",
+      "Google veya Outlook hesabı bağlandığında fatura ve ödeme mailleri taranır, sadece kullanıcıya ait abonelikler çıkarılır.",
     source: "Gmail API / Microsoft Graph",
-    trustLabel: "Ucretsiz baslangic icin en mantikli yol",
+    trustLabel: "Ücretsiz başlangıç için en mantıklı yol",
     accent: "turkuaz",
   },
   {
     id: "ocr",
     title: "OCR yedek yontemi",
     description:
-      "Mail baglamak istemeyen kullanici ekran goruntusu yukleyerek aboneliklerini daha sonra iceri alabilir.",
-    source: "OCR / galeri taramasi",
-    trustLabel: "Ikinci adim",
+      "Mail bağlamak istemeyen kullanıcı ekran görüntüsü yükleyerek aboneliklerini daha sonra içeri alabilir.",
+    source: "OCR / galeri taraması",
+    trustLabel: "İkinci adım",
     accent: "yesil",
   },
   {
     id: "banking",
     title: "Banka entegrasyonu",
     description:
-      "Acik bankacilik baglantisi ile duzenli harcamalar analiz edilerek abonelikler tespit edilebilir.",
-    source: "Acik bankacilik / PSD2",
-    trustLabel: "Gelecek surum",
+      "Açık bankacılık bağlantısı ile düzenli harcamalar analiz edilerek abonelikler tespit edilebilir.",
+    source: "Açık bankacılık / PSD2",
+    trustLabel: "Gelecek sürüm",
     accent: "amber",
   },
 ];
@@ -67,12 +67,12 @@ const detectedEmailSubscriptions: IntakePreviewItem[] = [
     billingCycle: "monthly",
     nextPaymentDate: "2026-07-24",
     confidence: 0.96,
-    notes: "Odeme alindi ve fatura maili eslesmesinden algilandi.",
+    notes: "Ödeme alındı ve fatura maili eşleşmesinden algılandı.",
   },
   {
     id: "mail-2",
     name: "Spotify Bireysel",
-    category: "Muzik",
+    category: "Müzik",
     logoUrl: buildImage("spotify premium app icon, green black music tile, realistic"),
     currentAmount: 99,
     currency: "TRY",
@@ -104,7 +104,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     currentPrice: 189.99,
     currency: "TRY",
     billingCycle: "monthly",
-    sourceLabel: "Turkiye fiyat guncellemesi",
+    sourceLabel: "Türkiye fiyat güncellemesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.gzt.com/gundem/netflix-fiyatlari-ne-kadar-oldu-2026-netflixe-zam-mi-geldi-guncel-netflix-fiyat-listesi-4006078",
     description: "Temel plan icin izleme odakli video platformu.",
@@ -112,7 +112,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
   {
     id: "discover-spotify",
     name: "Spotify Premium",
-    category: "Muzik",
+    category: "Müzik",
     logoUrl: buildImage("spotify premium app icon, green black music tile, realistic"),
     currentPrice: 99,
     currency: "TRY",
@@ -130,7 +130,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     currentPrice: 119.99,
     currency: "TRY",
     billingCycle: "monthly",
-    sourceLabel: "Haziran 2026 fiyat guncellemesi",
+    sourceLabel: "Haziran 2026 fiyat güncellemesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.haberturk.com/youtube-premium-turkiye-fiyatlarina-zam-geldi-3890888-teknoloji",
     description: "Reklamsiz video, arka planda oynatma ve Music dahil.",
@@ -143,7 +143,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     currentPrice: 129.99,
     currency: "TRY",
     billingCycle: "monthly",
-    sourceLabel: "iCloud+ Turkiye fiyat listesi",
+    sourceLabel: "iCloud+ Türkiye fiyat listesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.karekod.org/blog/icloud-fiyatlari/",
     description: "Apple ekosistemi icin bulut depolama ve aile paylasimi.",
@@ -231,12 +231,12 @@ function createPredictedAmounts(amount: number) {
       increaseRate: 5.4,
     },
     {
-      month: "Iki ay sonra",
+      month: "İki ay sonra",
       amount: Number((amount * 1.081).toFixed(2)),
       increaseRate: 2.6,
     },
     {
-      month: "Uc ay sonra",
+      month: "Üç ay sonra",
       amount: Number((amount * 1.097).toFixed(2)),
       increaseRate: 1.5,
     },
@@ -271,13 +271,13 @@ export function getPredictionById(id: string): PredictionResponse | undefined {
     predictedAmounts: item.predictedAmounts,
     notes: [
       item.officialNextAmount
-        ? "Resmi sonraki odeme aciklandigi icin ilk satir dogrudan resmi veriyle gosterildi."
-        : "Resmi sonraki odeme yok; ilk satir tahmini veri olarak sunuldu.",
-      "Tahmin motoru gecmis odeme ritmi, kategori hareketi ve donemsel fiyat guncellemelerini kullanir.",
+        ? "Resmi sonraki ödeme açıklandığı için ilk satır doğrudan resmi veriyle gösterildi."
+        : "Resmi sonraki ödeme yok; ilk satır tahmini veri olarak sunuldu.",
+      "Tahmin motoru geçmiş ödeme ritmi, kategori hareketi ve dönemsel fiyat güncellemelerini kullanır.",
       process.env.AI_API_KEY
-        ? "Sunucu tarafinda AI anahtari tanimli, gelismis tahmin akisina gecise hazir."
-        : "AI anahtari tanimli degil, demo tahmin motoru calisiyor.",
-      `Bu abonelik ${item.detectionMethod} yontemi ile %${Math.round(item.detectionConfidence * 100)} guvenle algilandi.`,
+        ? "Sunucu tarafında AI anahtarı tanımlı, gelişmiş tahmin akışına geçişe hazır."
+        : "AI anahtarı tanımlı değil, demo tahmin motoru çalışıyor.",
+      `Bu abonelik ${item.detectionMethod} yöntemi ile %${Math.round(item.detectionConfidence * 100)} güvenle algılandı.`,
     ],
   };
 }
@@ -312,7 +312,7 @@ export function connectEmailAccount(input: EmailConnectInput): EmailAnalysisResp
   return {
     connection: activeConnection,
     summary:
-      "Mail kutusunda fatura, receipt, invoice ve payment confirmation mailleri tarandi; yalnizca algilanan abonelik adaylari listelendi.",
+      "Mail kutusunda fatura, receipt, invoice ve payment confirmation mailleri tarandı; yalnızca algılanan abonelik adayları listelendi.",
     preview: detectedEmailSubscriptions,
   };
 }
@@ -326,7 +326,7 @@ export function simulateIntake(input: IntakeSimulationInput): IntakeSimulationRe
     method: input.method,
     provider: input.provider || "Demo",
     lastSyncAt: new Date().toISOString(),
-    summary: "Bu yedek yontem demo modunda hazir tutuluyor.",
+    summary: "Bu yedek yöntem demo modunda hazır tutuluyor.",
     preview: input.method === "email" ? detectedEmailSubscriptions : [],
   };
 }
@@ -386,11 +386,11 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
     detectionConfidence: input.detectionConfidence ?? 0.9,
     notes:
       input.notes ||
-      "Mail analizi ile bulunan ve kullanici tarafindan onaylanarak Aboneliklerim listesine eklenen kayit.",
+      "Mail analizi ile bulunan ve kullanıcı tarafından onaylanarak Aboneliklerim listesine eklenen kayıt.",
     paymentHistory: [
       {
         id: `${slugify(input.name)}-predicted`,
-        label: "Sonraki odeme tahmini",
+        label: "Sonraki ödeme tahmini",
         amount: Number((input.currentAmount * 1.04).toFixed(2)),
         paidAt: input.nextPaymentDate,
         source: "predicted",
