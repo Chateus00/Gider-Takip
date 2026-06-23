@@ -74,7 +74,6 @@ export default function SubscriptionForm() {
 
     setIsAnalyzing(true);
     setError("");
-    setImportedMap({});
     setStatusMessage(`${providerText[providerToScan].label} bağlandı, e-postalar taranıyor...`);
     setProvider(providerToScan);
 
@@ -85,8 +84,31 @@ export default function SubscriptionForm() {
         email: response.connection.email,
       });
       setConnectedAccounts(storeConnectedMailAccount(savedConnection.connection));
+      const createdEntries = await Promise.all(
+        response.preview.map(async (item) => {
+          const created = await createSubscription({
+            name: item.name,
+            category: item.category,
+            logoUrl: item.logoUrl,
+            currentAmount: item.currentAmount,
+            currency: item.currency,
+            billingCycle: item.billingCycle,
+            nextPaymentDate: item.nextPaymentDate,
+            reminderDaysBefore: 3,
+            notes: item.notes,
+            detectionMethod: "email",
+            detectionConfidence: item.confidence,
+          });
+
+          return [item.id, created.id] as const;
+        })
+      );
+
+      setImportedMap(Object.fromEntries(createdEntries));
       setAnalysis(response);
-      setStatusMessage(response.summary);
+      setStatusMessage(
+        `${response.preview.length} abonelik kontrol paneline eklendi. Yeni bir hesap bağlamadıkça tekrar tarama yapman gerekmez.`
+      );
     } catch (analysisError) {
       setError(
         analysisError instanceof Error ? analysisError.message : "Mail analizi başlatılamadı."
@@ -148,7 +170,7 @@ export default function SubscriptionForm() {
     {
       id: "review",
       title: "Sonuçları onayla",
-      description: "Bulduklarını tek tek Aboneliklerime ekle.",
+      description: "Bulunan abonelikler otomatik olarak kontrol paneline eklenir.",
       done: Boolean(analysisStats?.importedCount),
       active: Boolean(analysis) && !isAnalyzing,
     },
@@ -313,7 +335,7 @@ export default function SubscriptionForm() {
               Aboneliklerini gelen kutundan yakala
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-              Aboneliklerim sekmesinde sadece bu hesap üzerinden bulunan ve onayladığın servisler yer alır.
+              Bağlı hesaplarda bulunan abonelikler kontrol paneline eklenir ve tekrar girişte yeniden tarama istemez.
             </p>
           </div>
           <div className="rounded-[24px] bg-slate-50 px-4 py-3">
@@ -548,7 +570,7 @@ export default function SubscriptionForm() {
                         disabled={importingId === item.id}
                         className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        {importingId === item.id ? "Ekleniyor" : "Aboneliklerime ekle"}
+                        {importingId === item.id ? "Ekleniyor" : "Tekrar ekle"}
                       </button>
                     )}
                   </div>
@@ -561,7 +583,7 @@ export default function SubscriptionForm() {
                 <div>
                   <p className="text-sm font-semibold text-slate-900">Onaylanan abonelikler panele hazır</p>
                   <p className="mt-1 text-sm text-slate-500">
-                    İstersen panele dönüp toplam harcamayı ve yaklaşan ödemeleri görebilirsin.
+                    Tespit edilen abonelikler artık kontrol panelinde kalır; yeni tarama sadece güncelleme gerektiğinde gerekir.
                   </p>
                 </div>
                 <button
