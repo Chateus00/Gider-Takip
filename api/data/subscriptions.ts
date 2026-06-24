@@ -107,7 +107,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "Türkiye fiyat güncellemesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.gzt.com/gundem/netflix-fiyatlari-ne-kadar-oldu-2026-netflixe-zam-mi-geldi-guncel-netflix-fiyat-listesi-4006078",
-    description: "Temel plan icin izleme odakli video platformu.",
+    description:
+      "Dizi ve film odaklı yayın platformu. Çoklu cihaz desteği, çevrimdışı izleme ve farklı çözünürlük seçenekleri sunar. Plan detayları ülkeye ve pakete göre değişebilir.",
   },
   {
     id: "discover-spotify",
@@ -120,7 +121,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "Spotify resmi premium sayfasi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.spotify.com/tr-tr/premium/",
-    description: "Bireysel plan; reklamsiz muzik ve offline dinleme.",
+    description:
+      "Reklamsız müzik dinleme, çevrimdışı kullanım ve yüksek ses kalitesi seçenekleri sunar. Bireysel/Aile/Öğrenci gibi planlar bulunur ve fiyatlar plan türüne göre değişebilir.",
   },
   {
     id: "discover-youtube",
@@ -133,7 +135,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "Haziran 2026 fiyat güncellemesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.haberturk.com/youtube-premium-turkiye-fiyatlarina-zam-geldi-3890888-teknoloji",
-    description: "Reklamsiz video, arka planda oynatma ve Music dahil.",
+    description:
+      "Reklamsız izleme, arka planda oynatma ve çevrimdışı indirme gibi özellikler sunar. Çoğu bölgede YouTube Music Premium erişimi de dahildir. Paket içeriği ülkeye göre değişebilir.",
   },
   {
     id: "discover-icloud",
@@ -146,7 +149,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "iCloud+ Türkiye fiyat listesi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.karekod.org/blog/icloud-fiyatlari/",
-    description: "Apple ekosistemi icin bulut depolama ve aile paylasimi.",
+    description:
+      "Apple ekosisteminde fotoğraf, dosya ve yedeklemeler için bulut depolama sağlar. Aile paylaşımı, özel e-posta alan adı ve gelişmiş gizlilik özellikleri planlara göre sunulabilir.",
   },
   {
     id: "discover-disney",
@@ -159,7 +163,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "Katalog verisi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.disneyplus.com",
-    description: "Dizi, film ve Marvel odakli yayin platformu.",
+    description:
+      "Dizi ve film yayın platformu. Marvel, Star Wars ve belgesel içerikleri gibi geniş bir katalog sunar. Paket içerikleri ve fiyatlar bölgeye göre farklılık gösterebilir.",
   },
   {
     id: "discover-gamepass",
@@ -172,7 +177,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceLabel: "Katalog verisi",
     updatedAt: "2026-06-21",
     sourceUrl: "https://www.xbox.com",
-    description: "Konsol ve PC oyun kutuphanesi icin aylik oyun aboneligi.",
+    description:
+      "Konsol ve/veya PC için geniş oyun kütüphanesine erişim sunan abonelik. Oyun kataloğu zamanla değişebilir ve bazı planlarda çevrim içi çok oyunculu avantajlar bulunabilir.",
   },
 ];
 

@@ -26,6 +26,15 @@ function buildRecommendationReason(item: DiscoverSubscriptionItem, subscriptions
   return t("recommendations.reasonFallback");
 }
 
+function normalizeAppName(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 export default function Recommendations() {
   const { t } = useI18n();
   const [query, setQuery] = useState("");
@@ -54,11 +63,16 @@ export default function Recommendations() {
   }, [query, t]);
 
   const recommendationItems = useMemo(
-    () =>
-      items.map((item) => ({
-        ...item,
-        reason: buildRecommendationReason(item, subscriptions, t),
-      })),
+    () => {
+      const subscriptionNameSet = new Set(subscriptions.map((subscription) => normalizeAppName(subscription.name)));
+
+      return items
+        .filter((item) => !subscriptionNameSet.has(normalizeAppName(item.name)))
+        .map((item) => ({
+          ...item,
+          reason: buildRecommendationReason(item, subscriptions, t),
+        }));
+    },
     [items, subscriptions, t]
   );
 
