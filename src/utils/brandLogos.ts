@@ -1,3 +1,6 @@
+import type { SimpleIcon } from "simple-icons";
+import { siIcloud, siNetflix, siSpotify, siYoutube } from "simple-icons";
+
 function normalizeAppName(value: string) {
   return value
     .toLowerCase()
@@ -7,21 +10,44 @@ function normalizeAppName(value: string) {
     .trim();
 }
 
-export function getBrandLogoSources(appName: string, fallbackSrc: string) {
+export interface BrandLogoConfig {
+  localSrc?: string;
+  fallbackSrc: string;
+  icon?: SimpleIcon;
+  iconColor?: string;
+  iconBackground?: string;
+}
+
+export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandLogoConfig {
   const normalized = normalizeAppName(appName);
 
-  const mapping: Array<{ match: (value: string) => boolean; src: string }> = [
-    { match: (value) => value === "netflix", src: "/brands/netflix.png" },
-    { match: (value) => value === "spotify premium" || value === "spotify", src: "/brands/spotify.png" },
-    { match: (value) => value === "youtube premium" || value === "youtube", src: "/brands/youtube.png" },
-    { match: (value) => value.startsWith("icloud"), src: "/brands/icloud.png" },
-    { match: (value) => value === "disney" || value === "disney plus" || value === "disney+", src: "/brands/disney.png" },
-    { match: (value) => value.includes("game pass"), src: "/brands/gamepass.png" },
+  const mapping: Array<{ match: (value: string) => boolean; config: Omit<BrandLogoConfig, "fallbackSrc"> }> = [
+    {
+      match: (value) => value === "netflix",
+      config: { localSrc: "/brands/netflix.png", icon: siNetflix, iconColor: "#E50914", iconBackground: "#111111" },
+    },
+    {
+      match: (value) => value === "spotify premium" || value === "spotify",
+      config: { localSrc: "/brands/spotify.png", icon: siSpotify, iconColor: `#${siSpotify.hex}`, iconBackground: "#191414" },
+    },
+    {
+      match: (value) => value === "youtube premium" || value === "youtube",
+      config: { localSrc: "/brands/youtube.png", icon: siYoutube, iconColor: `#${siYoutube.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value.startsWith("icloud"),
+      config: { localSrc: "/brands/icloud.png", icon: siIcloud, iconColor: `#${siIcloud.hex}`, iconBackground: "#F4F7FB" },
+    },
+    {
+      match: (value) => value === "disney" || value === "disney plus" || value === "disney+",
+      config: { localSrc: "/brands/disney.png" },
+    },
+    {
+      match: (value) => value.includes("game pass"),
+      config: { localSrc: "/brands/gamepass.png" },
+    },
   ];
 
   const match = mapping.find((entry) => entry.match(normalized));
-  const primarySrc = match?.src ?? fallbackSrc;
-
-  return { primarySrc, fallbackSrc };
+  return { fallbackSrc, ...(match?.config ?? {}) };
 }
-
