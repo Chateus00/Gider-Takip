@@ -1,5 +1,30 @@
 import type { SimpleIcon } from "simple-icons";
-import { siIcloud, siNetflix, siSpotify, siYoutube } from "simple-icons";
+import {
+  si1password,
+  siAppletv,
+  siApplemusic,
+  siBitwarden,
+  siDiscord,
+  siDropbox,
+  siFigma,
+  siGithubcopilot,
+  siHeadspace,
+  siIcloud,
+  siMax,
+  siNetflix,
+  siNordvpn,
+  siNotion,
+  siParamountplus,
+  siPlaystation,
+  siProtonmail,
+  siSpotify,
+  siSteam,
+  siStrava,
+  siTwitch,
+  siDuolingo,
+  siYoutube,
+  siZoom,
+} from "simple-icons";
 
 function normalizeAppName(value: string) {
   return value
@@ -16,6 +41,7 @@ export interface BrandLogoConfig {
   icon?: SimpleIcon;
   iconColor?: string;
   iconBackground?: string;
+  fit?: "cover" | "contain";
 }
 
 export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandLogoConfig {
@@ -40,11 +66,91 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
     },
     {
       match: (value) => value === "disney" || value === "disney plus" || value === "disney+",
-      config: { localSrc: "/brands/disney.png" },
+      config: { localSrc: "/brands/disneyplus.svg", fit: "contain" },
     },
     {
       match: (value) => value.includes("game pass"),
-      config: { localSrc: "/brands/gamepass.png" },
+      config: { localSrc: "/brands/xbox-game-pass.svg", fit: "contain" },
+    },
+    {
+      match: (value) => value === "apple tv" || value === "apple tv+" || value.includes("apple tv"),
+      config: { icon: siAppletv, iconColor: `#${siAppletv.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "apple music" || value.includes("apple music"),
+      config: { icon: siApplemusic, iconColor: `#${siApplemusic.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "dropbox" || value.startsWith("dropbox "),
+      config: { icon: siDropbox, iconColor: `#${siDropbox.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "notion" || value.startsWith("notion "),
+      config: { icon: siNotion, iconColor: `#${siNotion.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "zoom" || value.startsWith("zoom "),
+      config: { icon: siZoom, iconColor: `#${siZoom.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "max" || value === "hbo max" || value.includes("hbo max"),
+      config: { icon: siMax, iconColor: `#${siMax.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "paramount+" || value === "paramount plus" || value.includes("paramount"),
+      config: { icon: siParamountplus, iconColor: `#${siParamountplus.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "steam" || value.startsWith("steam "),
+      config: { icon: siSteam, iconColor: `#${siSteam.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "twitch" || value.startsWith("twitch "),
+      config: { icon: siTwitch, iconColor: `#${siTwitch.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "discord" || value.startsWith("discord "),
+      config: { icon: siDiscord, iconColor: `#${siDiscord.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "strava" || value.startsWith("strava "),
+      config: { icon: siStrava, iconColor: `#${siStrava.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "duolingo" || value.includes("duolingo"),
+      config: { icon: siDuolingo, iconColor: `#${siDuolingo.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "headspace" || value.startsWith("headspace "),
+      config: { icon: siHeadspace, iconColor: `#${siHeadspace.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "proton mail" || value === "protonmail" || value.startsWith("proton"),
+      config: { icon: siProtonmail, iconColor: `#${siProtonmail.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "nordvpn" || value === "nord vpn" || value.includes("nordvpn"),
+      config: { icon: siNordvpn, iconColor: `#${siNordvpn.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "bitwarden" || value.startsWith("bitwarden "),
+      config: { icon: siBitwarden, iconColor: `#${siBitwarden.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "1password" || value === "1 password",
+      config: { icon: si1password, iconColor: `#${si1password.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "figma" || value.startsWith("figma "),
+      config: { icon: siFigma, iconColor: `#${siFigma.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "github copilot" || value.includes("copilot"),
+      config: { icon: siGithubcopilot, iconColor: `#${siGithubcopilot.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "playstation plus" || value === "ps plus" || value.includes("playstation plus"),
+      config: { icon: siPlaystation, iconColor: `#${siPlaystation.hex}`, iconBackground: "#FFFFFF" },
     },
   ];
 

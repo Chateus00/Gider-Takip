@@ -9,7 +9,7 @@ interface BrandLogoImageProps {
 }
 
 export default function BrandLogoImage({ name, src, alt, className }: BrandLogoImageProps) {
-  const { localSrc, fallbackSrc, icon, iconColor = "#111111", iconBackground = "#FFFFFF" } = getBrandLogoConfig(name, src);
+  const { localSrc, fallbackSrc, icon, iconColor = "#111111", iconBackground = "#FFFFFF", fit } = getBrandLogoConfig(name, src);
   const [currentSrc, setCurrentSrc] = useState(localSrc ?? fallbackSrc);
   const [showVector, setShowVector] = useState(Boolean(icon && !localSrc));
 
@@ -33,11 +33,13 @@ export default function BrandLogoImage({ name, src, alt, className }: BrandLogoI
     );
   }
 
+  const imageClassName = fit === "contain" ? `${className ?? ""} object-contain p-3` : className;
+
   return (
     <img
       src={currentSrc}
       alt={alt}
-      className={className}
+      className={imageClassName}
       onError={() => {
         if (icon) {
           setShowVector(true);
