@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import type { PredictionResponse, SubscriptionItem } from "../../shared/subscriptions";
 import DetailTimeline from "@/components/DetailTimeline";
 import ForecastPanel from "@/components/ForecastPanel";
+import BrandLogoImage from "@/components/BrandLogoImage";
 import ReminderSelect from "@/components/ReminderSelect";
 import { useI18n } from "@/contexts/I18nContext";
 import { fetchPrediction, fetchSubscription, updateSubscription } from "@/utils/api";
@@ -90,7 +91,7 @@ export default function SubscriptionDetail() {
       <section className="grid gap-6 rounded-[32px] border border-white/10 bg-slate-950 p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.4)] lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-5">
           <div className="flex items-center gap-4">
-            <img src={item.logoUrl} alt={item.name} className="h-20 w-20 rounded-[24px] object-cover" />
+            <BrandLogoImage name={item.name} src={item.logoUrl} alt={item.name} className="h-20 w-20 rounded-[24px] object-cover" />
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{item.category}</p>
               <h1 className="mt-2 font-['Fraunces',serif] text-4xl">{item.name}</h1>

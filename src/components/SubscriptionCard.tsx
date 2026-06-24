@@ -3,6 +3,7 @@ import { ChevronRight, Clock3, Landmark, Mail, ScanSearch } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SubscriptionItem } from "../../shared/subscriptions";
 import { useI18n } from "@/contexts/I18nContext";
+import BrandLogoImage from "@/components/BrandLogoImage";
 import ReminderSelect from "@/components/ReminderSelect";
 import { updateSubscription } from "@/utils/api";
 import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
@@ -106,7 +107,8 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
 
       <div className="flex items-center justify-between gap-4 md:min-w-[168px] md:flex-col md:items-center md:justify-start">
         <div className="hidden h-[132px] w-[132px] items-center justify-center rounded-[28px] bg-slate-100 md:flex">
-          <img
+          <BrandLogoImage
+            name={item.name}
             src={item.logoUrl}
             alt={item.name}
             className="h-24 w-24 rounded-[24px] object-cover shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
