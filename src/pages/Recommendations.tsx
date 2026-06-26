@@ -127,7 +127,8 @@ export default function Recommendations() {
                   name={item.name}
                   src={item.logoUrl}
                   alt={item.name}
-                  className="h-20 w-20 rounded-[24px] object-cover"
+                  containerClassName="flex min-h-20 min-w-[116px] max-w-[160px] items-center"
+                  className="max-h-20 w-auto max-w-[160px] object-contain"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">

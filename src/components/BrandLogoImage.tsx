@@ -6,10 +6,11 @@ interface BrandLogoImageProps {
   src: string;
   alt: string;
   className?: string;
+  containerClassName?: string;
 }
 
-export default function BrandLogoImage({ name, src, alt, className }: BrandLogoImageProps) {
-  const { localSrc, fallbackSrc, icon, iconColor = "#111111", iconBackground = "#FFFFFF", fit } = getBrandLogoConfig(name, src);
+export default function BrandLogoImage({ name, src, alt, className, containerClassName }: BrandLogoImageProps) {
+  const { localSrc, fallbackSrc, icon, iconColor = "#111111", fit } = getBrandLogoConfig(name, src);
   const [currentSrc, setCurrentSrc] = useState(localSrc ?? fallbackSrc);
   const [showVector, setShowVector] = useState(Boolean(icon && !localSrc));
 
@@ -18,38 +19,31 @@ export default function BrandLogoImage({ name, src, alt, className }: BrandLogoI
     setShowVector(Boolean(icon && !localSrc));
   }, [fallbackSrc, icon, localSrc]);
 
-  if (showVector && icon) {
-    return (
-      <span
-        className={`inline-flex items-center justify-center overflow-hidden ${className ?? ""}`}
-        aria-label={alt}
-        role="img"
-        style={{ backgroundColor: iconBackground }}
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-full w-full">
-          <path d={icon.path} fill={iconColor} />
-        </svg>
-      </span>
-    );
-  }
-
-  const imageClassName = fit === "contain" ? `${className ?? ""} object-contain p-3` : className;
+  const mediaClassName = fit === "contain" ? `${className ?? ""} object-contain` : className;
 
   return (
-    <img
-      src={currentSrc}
-      alt={alt}
-      className={imageClassName}
-      onError={() => {
-        if (icon) {
-          setShowVector(true);
-          return;
-        }
+    <span className={containerClassName}>
+      {showVector && icon ? (
+        <svg viewBox="0 0 24 24" aria-label={alt} role="img" className={mediaClassName}>
+          <path d={icon.path} fill={iconColor} />
+        </svg>
+      ) : (
+        <img
+          src={currentSrc}
+          alt={alt}
+          className={mediaClassName}
+          onError={() => {
+            if (icon) {
+              setShowVector(true);
+              return;
+            }
 
-        if (fallbackSrc !== currentSrc) {
-          setCurrentSrc(fallbackSrc);
-        }
-      }}
-    />
+            if (fallbackSrc !== currentSrc) {
+              setCurrentSrc(fallbackSrc);
+            }
+          }}
+        />
+      )}
+    </span>
   );
 }

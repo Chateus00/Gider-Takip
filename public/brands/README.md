@@ -5,6 +5,10 @@ Beklenen dosya adları:
 - spotify.png
 - youtube.png
 - icloud.png
+- blutv.svg
+- exxen.svg
+- gain.svg
+- bein-connect.ico
 - disneyplus.svg
 - xbox-game-pass.svg
 

@@ -91,7 +91,13 @@ export default function SubscriptionDetail() {
       <section className="grid gap-6 rounded-[32px] border border-white/10 bg-slate-950 p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.4)] lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-5">
           <div className="flex items-center gap-4">
-            <BrandLogoImage name={item.name} src={item.logoUrl} alt={item.name} className="h-20 w-20 rounded-[24px] object-cover" />
+            <BrandLogoImage
+              name={item.name}
+              src={item.logoUrl}
+              alt={item.name}
+              containerClassName="flex min-h-20 min-w-[120px] max-w-[168px] items-center"
+              className="max-h-20 w-auto max-w-[168px] object-contain"
+            />
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{item.category}</p>
               <h1 className="mt-2 font-['Fraunces',serif] text-4xl">{item.name}</h1>

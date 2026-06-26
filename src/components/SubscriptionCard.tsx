@@ -106,12 +106,13 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
       </div>
 
       <div className="flex items-center justify-between gap-4 md:min-w-[168px] md:flex-col md:items-center md:justify-start">
-        <div className="hidden h-[132px] w-[132px] items-center justify-center rounded-[28px] bg-slate-100 md:flex">
+        <div className="hidden md:flex md:min-h-[96px] md:min-w-[124px] md:max-w-[168px] md:items-center md:justify-center">
           <BrandLogoImage
             name={item.name}
             src={item.logoUrl}
             alt={item.name}
-            className="h-24 w-24 rounded-[24px] object-cover shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
+            containerClassName="flex items-center justify-center"
+            className="max-h-24 w-auto max-w-[168px] object-contain"
           />
         </div>
         <Link

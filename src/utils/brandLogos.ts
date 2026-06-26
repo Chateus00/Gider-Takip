@@ -4,6 +4,7 @@ import {
   siAppletv,
   siApplemusic,
   siBitwarden,
+  siDeezer,
   siDiscord,
   siDropbox,
   siFigma,
@@ -17,9 +18,11 @@ import {
   siParamountplus,
   siPlaystation,
   siProtonmail,
+  siSoundcloud,
   siSpotify,
   siSteam,
   siStrava,
+  siTidal,
   siTwitch,
   siDuolingo,
   siYoutube,
@@ -71,6 +74,22 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
     {
       match: (value) => value.includes("game pass"),
       config: { localSrc: "/brands/xbox-game-pass.svg", fit: "contain" },
+    },
+    {
+      match: (value) => value === "blutv" || value.startsWith("blutv "),
+      config: { localSrc: "/brands/blutv.svg", fit: "contain" },
+    },
+    {
+      match: (value) => value === "exxen" || value.startsWith("exxen "),
+      config: { localSrc: "/brands/exxen.svg", fit: "contain" },
+    },
+    {
+      match: (value) => value === "gain" || value === "gain tv",
+      config: { localSrc: "/brands/gain.svg", fit: "contain" },
+    },
+    {
+      match: (value) => value === "bein connect" || value === "beinconnect" || value.includes("bein connect"),
+      config: { localSrc: "/brands/bein-connect.ico", fit: "contain" },
     },
     {
       match: (value) => value === "apple tv" || value === "apple tv+" || value.includes("apple tv"),
@@ -127,6 +146,18 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
     {
       match: (value) => value === "proton mail" || value === "protonmail" || value.startsWith("proton"),
       config: { icon: siProtonmail, iconColor: `#${siProtonmail.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "tidal" || value.startsWith("tidal "),
+      config: { icon: siTidal, iconColor: `#${siTidal.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "deezer" || value.startsWith("deezer "),
+      config: { icon: siDeezer, iconColor: `#${siDeezer.hex}`, iconBackground: "#FFFFFF" },
+    },
+    {
+      match: (value) => value === "soundcloud go" || value === "soundcloud go+" || value.startsWith("soundcloud"),
+      config: { icon: siSoundcloud, iconColor: `#${siSoundcloud.hex}`, iconBackground: "#FFFFFF" },
     },
     {
       match: (value) => value === "nordvpn" || value === "nord vpn" || value.includes("nordvpn"),
