@@ -52,15 +52,15 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
 
   const mapping: Array<{ match: (value: string) => boolean; config: Omit<BrandLogoConfig, "fallbackSrc"> }> = [
     {
-      match: (value) => value === "netflix",
+      match: (value) => value === "netflix" || value.startsWith("netflix "),
       config: { localSrc: "/brands/netflix.png", icon: siNetflix, iconColor: "#E50914", iconBackground: "#111111" },
     },
     {
-      match: (value) => value === "spotify premium" || value === "spotify",
+      match: (value) => value === "spotify" || value.startsWith("spotify "),
       config: { localSrc: "/brands/spotify.png", icon: siSpotify, iconColor: `#${siSpotify.hex}`, iconBackground: "#191414" },
     },
     {
-      match: (value) => value === "youtube premium" || value === "youtube",
+      match: (value) => value === "youtube" || value.startsWith("youtube "),
       config: { localSrc: "/brands/youtube.png", icon: siYoutube, iconColor: `#${siYoutube.hex}`, iconBackground: "#FFFFFF" },
     },
     {
@@ -68,7 +68,7 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
       config: { localSrc: "/brands/icloud.png", icon: siIcloud, iconColor: `#${siIcloud.hex}`, iconBackground: "#F4F7FB" },
     },
     {
-      match: (value) => value === "disney" || value === "disney plus" || value === "disney+",
+      match: (value) => value === "disney" || value === "disney plus" || value === "disney+" || value.startsWith("disney "),
       config: { localSrc: "/brands/disneyplus.svg", fit: "contain" },
     },
     {
@@ -96,7 +96,7 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
       config: { icon: siAppletv, iconColor: `#${siAppletv.hex}`, iconBackground: "#FFFFFF" },
     },
     {
-      match: (value) => value === "apple music" || value.includes("apple music"),
+      match: (value) => value === "apple music" || value.startsWith("apple music") || value.includes("apple music"),
       config: { icon: siApplemusic, iconColor: `#${siApplemusic.hex}`, iconBackground: "#FFFFFF" },
     },
     {

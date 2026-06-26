@@ -6,8 +6,7 @@ import BrandLogoImage from "@/components/BrandLogoImage";
 import { fetchDashboard, fetchDiscover } from "@/utils/api";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 
-const planOrderLabels = ["II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-const planStoragePrefix = "recommendation-plan:";
+const planOrderLabels = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
 function buildRecommendationReason(item: DiscoverSubscriptionItem, subscriptions: SubscriptionItem[], t: (key: string, values?: Record<string, string | number>) => string) {
   const sameCategory = subscriptions.find((subscription) => subscription.category === item.category);
@@ -45,7 +44,7 @@ function getSortedPlanPrices(item: DiscoverSubscriptionItem) {
 }
 
 function getPlanLabel(index: number) {
-  return planOrderLabels[index] ?? String(index + 2);
+  return planOrderLabels[index] ?? String(index + 1);
 }
 
 function RecommendationPriceSelector({ item }: { item: DiscoverSubscriptionItem }) {
@@ -53,42 +52,57 @@ function RecommendationPriceSelector({ item }: { item: DiscoverSubscriptionItem 
   const hasMultiplePlans = sortedPlanPrices.length > 1;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isPriceAnimating, setIsPriceAnimating] = useState(false);
 
   useEffect(() => {
-    if (!hasMultiplePlans || typeof window === "undefined") {
+    if (!hasMultiplePlans) {
       setSelectedIndex(0);
       setHoveredIndex(null);
       return;
     }
-
-    const storedIndex = Number.parseInt(
-      window.sessionStorage.getItem(`${planStoragePrefix}${item.id}`) ?? "0",
-      10
-    );
-    setSelectedIndex(Number.isInteger(storedIndex) && storedIndex >= 0 && storedIndex < sortedPlanPrices.length ? storedIndex : 0);
+    setSelectedIndex(0);
     setHoveredIndex(null);
-  }, [hasMultiplePlans, item.id, sortedPlanPrices.length]);
-
-  function persistSelectedIndex(nextIndex: number) {
-    setSelectedIndex(nextIndex);
-
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(`${planStoragePrefix}${item.id}`, String(nextIndex));
-    }
-  }
+  }, [hasMultiplePlans, item.id]);
 
   const activeIndex = hoveredIndex ?? selectedIndex;
   const activePrice = sortedPlanPrices[activeIndex] ?? item.currentPrice;
 
+  useEffect(() => {
+    if (!hasMultiplePlans) {
+      setIsPriceAnimating(false);
+      return;
+    }
+
+    setIsPriceAnimating(true);
+    const timeoutId = window.setTimeout(() => setIsPriceAnimating(false), 280);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [activeIndex, hasMultiplePlans]);
+
   return (
     <>
-      <p
-        className={`mt-2 text-2xl font-semibold text-slate-950 transition-all duration-200 ${
-          hoveredIndex !== null ? "translate-x-0.5 text-slate-900" : ""
-        }`}
-      >
-        {formatCurrency(activePrice, item.currency)}
-      </p>
+      <div className="mt-3 overflow-hidden rounded-[26px] border border-slate-200/80 bg-white px-4 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+        <div
+          className={`flex items-center justify-between gap-3 transition-all duration-300 ${
+            isPriceAnimating ? "-translate-y-0.5 scale-[1.02]" : ""
+          }`}
+        >
+          <p className="text-2xl font-semibold text-slate-950">
+            {formatCurrency(activePrice, item.currency)}
+          </p>
+          {hasMultiplePlans ? (
+            <span
+              className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] transition-all duration-300 ${
+                isPriceAnimating
+                  ? "bg-slate-950 text-white shadow-[0_12px_28px_rgba(15,23,42,0.18)]"
+                  : "bg-slate-100 text-slate-500"
+              }`}
+            >
+              {getPlanLabel(activeIndex)}
+            </span>
+          ) : null}
+        </div>
+      </div>
       {hasMultiplePlans ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {sortedPlanPrices.map((price, index) => {
@@ -103,13 +117,14 @@ function RecommendationPriceSelector({ item }: { item: DiscoverSubscriptionItem 
                 onMouseLeave={() => setHoveredIndex(null)}
                 onFocus={() => setHoveredIndex(index)}
                 onBlur={() => setHoveredIndex(null)}
-                onClick={() => persistSelectedIndex(index)}
-                className={`rounded-2xl border px-3 py-2 text-xs font-semibold tracking-[0.2em] transition-all duration-200 ${
+                onClick={() => setSelectedIndex(index)}
+                className={`rounded-2xl border px-3 py-2 text-xs font-semibold tracking-[0.2em] transition-all duration-300 ${
                   isActive || isSelected
-                    ? "border-slate-900 bg-slate-900 text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)]"
-                    : "border-slate-200 bg-white text-slate-500 hover:-translate-y-0.5 hover:border-slate-400 hover:text-slate-800"
+                    ? "border-slate-900 bg-slate-900 text-white shadow-[0_14px_30px_rgba(15,23,42,0.22)] -translate-y-0.5 scale-[1.03]"
+                    : "border-slate-200 bg-white text-slate-500 hover:-translate-y-1 hover:border-slate-400 hover:text-slate-800 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                 }`}
                 aria-label={`${getPlanLabel(index)} ${formatCurrency(price, item.currency)}`}
+                aria-pressed={isSelected}
               >
                 {getPlanLabel(index)}
               </button>
