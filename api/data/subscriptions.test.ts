@@ -48,6 +48,7 @@ describe("intake simulations", () => {
       name: "Test Subscription",
       category: "Test",
       logoUrl: "https://example.com/logo.png",
+      sourceEmail: "demo@example.com",
       currentAmount: 10,
       currency: "TRY",
       billingCycle: "monthly",
@@ -60,6 +61,7 @@ describe("intake simulations", () => {
 
     expect(created.detectionMethod).toBe("banking");
     expect(created.detectionConfidence).toBe(0.92);
+    expect(created.sourceEmail).toBe("demo@example.com");
   });
 
   it("excludes subscribed apps from the discover catalog", () => {

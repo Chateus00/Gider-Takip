@@ -94,6 +94,7 @@ export default function SubscriptionForm() {
             name: item.name,
             category: item.category,
             logoUrl: item.logoUrl,
+            sourceEmail: response.connection.email,
             currentAmount: item.currentAmount,
             currency: item.currency,
             billingCycle: item.billingCycle,

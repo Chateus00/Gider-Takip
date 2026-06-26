@@ -45,6 +45,7 @@ export interface SubscriptionItem {
   name: string;
   category: string;
   logoUrl: string;
+  sourceEmail?: string;
   currentAmount: number;
   currency: string;
   billingCycle: BillingCycle;
@@ -141,6 +142,7 @@ export interface CreateSubscriptionInput {
   name: string;
   category: string;
   logoUrl: string;
+  sourceEmail?: string;
   currentAmount: number;
   currency: string;
   billingCycle: BillingCycle;

@@ -105,7 +105,7 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4 md:min-w-[168px] md:flex-col md:items-center md:justify-start">
+      <div className="flex flex-col gap-4 md:min-w-[168px] md:items-center md:justify-start">
         <div className="flex min-h-[72px] min-w-[96px] max-w-[144px] items-center justify-center md:min-h-[96px] md:min-w-[124px] md:max-w-[168px]">
           <BrandLogoImage
             name={item.name}
@@ -117,11 +117,19 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
         </div>
         <Link
           to={`/abonelik/${item.id}`}
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950 md:mt-4"
+          className="inline-flex items-center gap-2 self-start rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition hover:border-slate-900 hover:text-slate-950 md:mt-4 md:self-center"
         >
           {t("subscription.detail")}
           <ChevronRight className="h-4 w-4" />
         </Link>
+        {item.sourceEmail ? (
+          <div className="w-full rounded-[20px] border border-emerald-100 bg-emerald-50/70 px-4 py-3 text-left">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-emerald-700">
+              {t("subscription.sourceEmail")}
+            </p>
+            <p className="mt-1 truncate text-sm font-medium text-slate-700">{item.sourceEmail}</p>
+          </div>
+        ) : null}
       </div>
     </article>
   );

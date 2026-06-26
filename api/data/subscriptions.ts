@@ -745,6 +745,9 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
   );
 
   if (existing) {
+    if (!existing.sourceEmail && input.sourceEmail) {
+      existing.sourceEmail = input.sourceEmail;
+    }
     return existing;
   }
 
@@ -753,6 +756,7 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
     name: input.name,
     category: input.category,
     logoUrl: input.logoUrl,
+    sourceEmail: input.sourceEmail,
     currentAmount: input.currentAmount,
     currency: input.currency,
     billingCycle: input.billingCycle,

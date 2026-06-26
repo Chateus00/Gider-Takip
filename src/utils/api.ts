@@ -159,6 +159,21 @@ function normalizeSubscription(item: SubscriptionItem): SubscriptionItem {
   };
 }
 
+function hydrateSourceEmail(item: SubscriptionItem, connections: EmailConnection[] = []): SubscriptionItem {
+  if (item.sourceEmail || item.detectionMethod !== "email" || connections.length !== 1) {
+    return item;
+  }
+
+  return {
+    ...item,
+    sourceEmail: connections[0]?.email,
+  };
+}
+
+function hydrateSubscriptions(items: SubscriptionItem[], connections: EmailConnection[] = []) {
+  return items.map((item) => hydrateSourceEmail(normalizeSubscription(item), connections));
+}
+
 function writeStorage<T>(key: string, value: T[]) {
   if (!isBrowser()) {
     return;
@@ -168,7 +183,7 @@ function writeStorage<T>(key: string, value: T[]) {
 }
 
 function getStoredSubscriptions() {
-  const normalized = readStorage<SubscriptionItem>(subscriptionsStorageKey).map(normalizeSubscription);
+  const normalized = hydrateSubscriptions(readStorage<SubscriptionItem>(subscriptionsStorageKey));
   setStoredSubscriptions(normalized);
   return normalized;
 }
@@ -211,6 +226,7 @@ function buildLocalSubscription(input: CreateSubscriptionInput): SubscriptionIte
     name: input.name,
     category: input.category,
     logoUrl: input.logoUrl,
+    sourceEmail: input.sourceEmail,
     currentAmount: input.currentAmount,
     currency: input.currency,
     billingCycle: input.billingCycle,
@@ -291,7 +307,10 @@ export async function fetchDashboard() {
   try {
     const response = await fetch(buildApiUrl("/api/subscriptions"));
     const remote = await handleResponse<DashboardResponse>(response);
-    const mergedItems = mergeSubscriptions(localItems, remote.items);
+    const mergedItems = hydrateSubscriptions(
+      mergeSubscriptions(localItems, remote.items),
+      mergeConnections(localConnections, remote.connections)
+    );
     const mergedConnections = mergeConnections(localConnections, remote.connections);
 
     setStoredSubscriptions(mergedItems);
@@ -304,26 +323,30 @@ export async function fetchDashboard() {
       items: mergedItems,
     };
   } catch {
+    const hydratedLocalItems = hydrateSubscriptions(localItems, localConnections);
+    setStoredSubscriptions(hydratedLocalItems);
     return {
-      summary: buildSummary(localItems),
+      summary: buildSummary(hydratedLocalItems),
       connections: localConnections,
       trackingMethods: [],
-      items: localItems,
+      items: hydratedLocalItems,
     };
   }
 }
 
 export async function fetchSubscription(id: string) {
   const localItem = getStoredSubscriptions().find((item) => item.id === id);
+  const localConnections = getStoredConnections();
 
   if (localItem) {
-    return localItem;
+    return hydrateSourceEmail(localItem, localConnections);
   }
 
   const response = await fetch(buildApiUrl(`/api/subscriptions/${id}`));
   const item = await handleResponse<SubscriptionItem>(response);
-  persistSubscription(item);
-  return item;
+  const hydratedItem = hydrateSourceEmail(item, localConnections);
+  persistSubscription(hydratedItem);
+  return hydratedItem;
 }
 
 export async function fetchPrediction(id: string) {

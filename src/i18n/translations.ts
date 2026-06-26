@@ -158,6 +158,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "Hatırlatmayı kapat",
       reminderUpdated: "Hatırlatma ayarı güncellendi.",
       reminderUpdateFailed: "Hatırlatma ayarı güncellenemedi.",
+      sourceEmail: "Ayıklandığı mail",
     },
     reminder: {
       title: "Hatırlatma ayarı",
@@ -511,6 +512,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "Turn reminder off",
       reminderUpdated: "Reminder settings updated.",
       reminderUpdateFailed: "Reminder settings could not be updated.",
+      sourceEmail: "Detected from",
     },
     reminder: {
       title: "Reminder setting",
@@ -840,6 +842,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "إيقاف التذكير",
       reminderUpdated: "تم تحديث إعداد التذكير.",
       reminderUpdateFailed: "تعذر تحديث إعداد التذكير.",
+      sourceEmail: "تم الاستخراج من",
     },
     reminder: {
       title: "إعداد التذكير",
@@ -1083,6 +1086,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "リマインダーをオフにする",
       reminderUpdated: "リマインダー設定を更新しました。",
       reminderUpdateFailed: "リマインダー設定を更新できませんでした。",
+      sourceEmail: "抽出元メール",
     },
     reminder: {
       title: "リマインダー設定",
@@ -1326,6 +1330,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "关闭提醒",
       reminderUpdated: "提醒设置已更新。",
       reminderUpdateFailed: "无法更新提醒设置。",
+      sourceEmail: "提取来源邮箱",
     },
     reminder: {
       title: "提醒设置",
@@ -1569,6 +1574,7 @@ const translations: Record<Language, TranslationTree> = {
       disableReminder: "알림 끄기",
       reminderUpdated: "알림 설정이 업데이트되었습니다.",
       reminderUpdateFailed: "알림 설정을 업데이트할 수 없습니다.",
+      sourceEmail: "추출된 메일",
     },
     reminder: {
       title: "알림 설정",
@@ -1815,7 +1821,10 @@ const translations: Record<Language, TranslationTree> = {
       detailsError: "Details konnten nicht geladen werden.",
       reminderOffDetail: "Aus",
       reminderLabel: "Erinnerung",
+      disableReminder: "Erinnerung deaktivieren",
+      reminderUpdated: "Erinnerungseinstellung aktualisiert.",
       reminderUpdateFailed: "Erinnerungseinstellung konnte nicht aktualisiert werden.",
+      sourceEmail: "Erkannt aus",
     },
     reminder: {
       title: "Erinnerungseinstellung",
@@ -2045,7 +2054,10 @@ const translations: Record<Language, TranslationTree> = {
       detailsError: "विवरण लोड नहीं हो सका।",
       reminderOffDetail: "बंद",
       reminderLabel: "रिमाइंडर",
+      disableReminder: "रिमाइंडर बंद करें",
+      reminderUpdated: "रिमाइंडर सेटिंग अपडेट हो गई।",
       reminderUpdateFailed: "रिमाइंडर सेटिंग अपडेट नहीं हो सकी।",
+      sourceEmail: "जिस मेल से मिला",
     },
     reminder: {
       title: "रिमाइंडर सेटिंग",
