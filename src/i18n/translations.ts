@@ -71,7 +71,7 @@ const translations: Record<Language, TranslationTree> = {
       googleStartFailed: "Google ile giriş başlatılamadı.",
       perksTitle: "Ayrıcalıklarımız",
       perks: [
-        "Tek ekranda aylık toplamını gör.",
+        "Tek panelde aylık abonelik harcamalarını gör.",
         "Yaklaşan ödemeleri önceden fark et.",
         "Zevkine uygun abonelik önerilerinden haberdar ol.",
         "Gelecekte abonelik ücretlerine yapılacak zam tahminlerini öğren.",
