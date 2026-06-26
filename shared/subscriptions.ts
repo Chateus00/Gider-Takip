@@ -123,6 +123,7 @@ export interface DiscoverSubscriptionItem {
   category: string;
   logoUrl: string;
   currentPrice: number;
+  planPrices?: number[];
   currency: string;
   billingCycle: BillingCycle;
   sourceLabel: string;

@@ -80,4 +80,10 @@ describe("intake simulations", () => {
     const result = getDiscoverItems("Spotify");
     expect(result.items.some((item) => item.name.includes("Spotify"))).toBe(false);
   });
+
+  it("excludes apps without a subscription price from the discover catalog", () => {
+    const result = getDiscoverItems();
+    expect(result.items.some((item) => item.currentPrice <= 0 && !(item.planPrices?.some((value) => value > 0) ?? false))).toBe(false);
+    expect(result.items.some((item) => item.name.toLowerCase() === "steam")).toBe(false);
+  });
 });

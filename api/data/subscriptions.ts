@@ -102,6 +102,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     category: "Video",
     logoUrl: buildImage("netflix app icon, premium streaming red black tile, realistic"),
     currentPrice: 189.99,
+    planPrices: [189.99, 289.99, 379.99],
     currency: "TRY",
     billingCycle: "monthly",
     sourceLabel: "Resmi abonelik sayfası",
@@ -116,6 +117,7 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     category: "Müzik",
     logoUrl: buildImage("spotify premium app icon, green black music tile, realistic"),
     currentPrice: 99,
+    planPrices: [99, 55, 135, 165],
     currency: "TRY",
     billingCycle: "monthly",
     sourceLabel: "Spotify resmi premium sayfasi",
@@ -129,7 +131,8 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     name: "YouTube Premium",
     category: "Video",
     logoUrl: buildImage("youtube premium app icon, red white premium tile, realistic"),
-    currentPrice: 119.99,
+    currentPrice: 79.99,
+    planPrices: [79.99, 159.99, 52.99],
     currency: "TRY",
     billingCycle: "monthly",
     sourceLabel: "Resmi abonelik sayfası",
@@ -140,10 +143,11 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
   },
   {
     id: "discover-icloud",
-    name: "iCloud+ 200 GB",
+    name: "iCloud+",
     category: "Bulut",
     logoUrl: buildImage("icloud storage app icon, blue silver cloud tile, realistic"),
-    currentPrice: 129.99,
+    currentPrice: 39.99,
+    planPrices: [39.99, 129.99, 399.99],
     currency: "TRY",
     billingCycle: "monthly",
     sourceLabel: "Resmi abonelik sayfası",
@@ -171,12 +175,13 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     name: "Xbox Game Pass",
     category: "Oyun",
     logoUrl: buildImage("xbox game pass app icon, green gaming premium tile, realistic"),
-    currentPrice: 209.99,
+    currentPrice: 269,
+    planPrices: [269, 409, 419, 529],
     currency: "TRY",
     billingCycle: "monthly",
     sourceLabel: "Katalog verisi",
     updatedAt: "2026-06-21",
-    sourceUrl: "https://www.xbox.com",
+    sourceUrl: "https://www.xbox.com/tr-tr/xbox-game-pass",
     description:
       "Konsol ve/veya PC için geniş oyun kütüphanesine erişim sunan abonelik. Oyun kataloğu zamanla değişebilir ve bazı planlarda çevrim içi çok oyunculu avantajlar bulunabilir.",
   },
@@ -333,20 +338,6 @@ const discoverCatalog: DiscoverSubscriptionItem[] = [
     sourceUrl: "https://soundcloud.com/go",
     description:
       "Reklamsız dinleme, çevrimdışı kullanım ve geniş katalog erişimi sunar. Plan kapsamı bölgeye göre farklılık gösterebilir.",
-  },
-  {
-    id: "discover-steam",
-    name: "Steam",
-    category: "Oyun",
-    logoUrl: buildImage("steam app icon, black white gaming tile, realistic"),
-    currentPrice: 0,
-    currency: "TRY",
-    billingCycle: "monthly",
-    sourceLabel: "Katalog verisi",
-    updatedAt: "2026-06-24",
-    sourceUrl: "https://store.steampowered.com",
-    description:
-      "PC oyun mağazası ve topluluk platformu. Abonelik yerine dönemsel servisler (örn. EA Play) veya oyun içi üyelikler kullanılabilir.",
   },
   {
     id: "discover-playstationplus",
@@ -720,6 +711,11 @@ export function getDiscoverItems(query = ""): DiscoverResponse {
   const subscribedNames = mySubscriptions.map((item) => item.name.toLowerCase());
 
   const filtered = discoverCatalog.filter((item) => {
+    const hasPaidPlan = (item.planPrices?.some((price) => price > 0) ?? false) || item.currentPrice > 0;
+    if (!hasPaidPlan) {
+      return false;
+    }
+
     const discoverName = item.name.toLowerCase();
     const isAlreadySubscribed = subscribedNames.some(
       (name) => name.includes(discoverName) || discoverName.includes(name)

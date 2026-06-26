@@ -36,6 +36,14 @@ function normalizeAppName(value: string) {
     .trim();
 }
 
+function formatDiscoverPrice(item: DiscoverSubscriptionItem) {
+  if (item.planPrices?.length) {
+    return item.planPrices.map((price) => formatCurrency(price, item.currency)).join(" / ");
+  }
+
+  return formatCurrency(item.currentPrice, item.currency);
+}
+
 export default function Recommendations() {
   const { t } = useI18n();
   const [query, setQuery] = useState("");
@@ -148,7 +156,7 @@ export default function Recommendations() {
                 <div className="rounded-[22px] bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{t("recommendations.priceLabel")}</p>
                   <p className="mt-2 text-2xl font-semibold text-slate-950">
-                    {formatCurrency(item.currentPrice, item.currency)}
+                    {formatDiscoverPrice(item)}
                   </p>
                   <p className="mt-2 text-sm text-slate-500">{item.sourceLabel}</p>
                 </div>
