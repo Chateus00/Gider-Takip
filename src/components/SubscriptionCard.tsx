@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, Clock3, Landmark, Mail, ScanSearch } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Clock3, Landmark, Mail, ScanSearch } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SubscriptionItem } from "../../shared/subscriptions";
 import { useI18n } from "@/contexts/I18nContext";
@@ -7,6 +7,7 @@ import BrandLogoImage from "@/components/BrandLogoImage";
 import ReminderSelect from "@/components/ReminderSelect";
 import { updateSubscription } from "@/utils/api";
 import { formatCurrency, formatDate, formatPercent } from "@/utils/formatters";
+import { getSubscriptionManagementUrl } from "@/utils/subscriptionManagementLinks";
 
 interface SubscriptionCardProps {
   item: SubscriptionItem;
@@ -28,6 +29,7 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
     trial: t("subscription.statuses.trial"),
     watch: t("subscription.statuses.watch"),
   } as const;
+  const managementUrl = getSubscriptionManagementUrl(item.name);
   const detection = detectionMap[item.detectionMethod];
   const DetectionIcon = detection.icon;
 
@@ -129,6 +131,17 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
             </p>
             <p className="mt-1 truncate text-sm font-medium text-slate-700">{item.sourceEmail}</p>
           </div>
+        ) : null}
+        {managementUrl ? (
+          <a
+            href={managementUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-[18px] border border-slate-900 bg-slate-900 px-4 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
+          >
+            {t("subscription.managePlan")}
+            <ArrowUpRight className="h-4 w-4" />
+          </a>
         ) : null}
       </div>
     </article>

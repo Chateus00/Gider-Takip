@@ -159,6 +159,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "Hatırlatma ayarı güncellendi.",
       reminderUpdateFailed: "Hatırlatma ayarı güncellenemedi.",
       sourceEmail: "Ayıklandığı mail",
+      managePlan: "Planımı yönet",
     },
     reminder: {
       title: "Hatırlatma ayarı",
@@ -513,6 +514,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "Reminder settings updated.",
       reminderUpdateFailed: "Reminder settings could not be updated.",
       sourceEmail: "Detected from",
+      managePlan: "Manage plan",
     },
     reminder: {
       title: "Reminder setting",
@@ -843,6 +845,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "تم تحديث إعداد التذكير.",
       reminderUpdateFailed: "تعذر تحديث إعداد التذكير.",
       sourceEmail: "تم الاستخراج من",
+      managePlan: "إدارة الخطة",
     },
     reminder: {
       title: "إعداد التذكير",
@@ -1087,6 +1090,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "リマインダー設定を更新しました。",
       reminderUpdateFailed: "リマインダー設定を更新できませんでした。",
       sourceEmail: "抽出元メール",
+      managePlan: "プランを管理",
     },
     reminder: {
       title: "リマインダー設定",
@@ -1331,6 +1335,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "提醒设置已更新。",
       reminderUpdateFailed: "无法更新提醒设置。",
       sourceEmail: "提取来源邮箱",
+      managePlan: "管理订阅",
     },
     reminder: {
       title: "提醒设置",
@@ -1575,6 +1580,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "알림 설정이 업데이트되었습니다.",
       reminderUpdateFailed: "알림 설정을 업데이트할 수 없습니다.",
       sourceEmail: "추출된 메일",
+      managePlan: "플랜 관리",
     },
     reminder: {
       title: "알림 설정",
@@ -1825,6 +1831,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "Erinnerungseinstellung aktualisiert.",
       reminderUpdateFailed: "Erinnerungseinstellung konnte nicht aktualisiert werden.",
       sourceEmail: "Erkannt aus",
+      managePlan: "Abo verwalten",
     },
     reminder: {
       title: "Erinnerungseinstellung",
@@ -2058,6 +2065,7 @@ const translations: Record<Language, TranslationTree> = {
       reminderUpdated: "रिमाइंडर सेटिंग अपडेट हो गई।",
       reminderUpdateFailed: "रिमाइंडर सेटिंग अपडेट नहीं हो सकी।",
       sourceEmail: "जिस मेल से मिला",
+      managePlan: "प्लान प्रबंधित करें",
     },
     reminder: {
       title: "रिमाइंडर सेटिंग",
