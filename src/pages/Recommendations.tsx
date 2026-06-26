@@ -6,6 +6,9 @@ import BrandLogoImage from "@/components/BrandLogoImage";
 import { fetchDashboard, fetchDiscover } from "@/utils/api";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 
+const planOrderLabels = ["II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+const planStoragePrefix = "recommendation-plan:";
+
 function buildRecommendationReason(item: DiscoverSubscriptionItem, subscriptions: SubscriptionItem[], t: (key: string, values?: Record<string, string | number>) => string) {
   const sameCategory = subscriptions.find((subscription) => subscription.category === item.category);
 
@@ -36,12 +39,86 @@ function normalizeAppName(value: string) {
     .trim();
 }
 
-function formatDiscoverPrice(item: DiscoverSubscriptionItem) {
-  if (item.planPrices?.length) {
-    return item.planPrices.map((price) => formatCurrency(price, item.currency)).join(" / ");
+function getSortedPlanPrices(item: DiscoverSubscriptionItem) {
+  const priceList = item.planPrices?.length ? item.planPrices : [item.currentPrice];
+  return [...new Set(priceList.filter((price) => price > 0))].sort((left, right) => left - right);
+}
+
+function getPlanLabel(index: number) {
+  return planOrderLabels[index] ?? String(index + 2);
+}
+
+function RecommendationPriceSelector({ item }: { item: DiscoverSubscriptionItem }) {
+  const sortedPlanPrices = useMemo(() => getSortedPlanPrices(item), [item]);
+  const hasMultiplePlans = sortedPlanPrices.length > 1;
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!hasMultiplePlans || typeof window === "undefined") {
+      setSelectedIndex(0);
+      setHoveredIndex(null);
+      return;
+    }
+
+    const storedIndex = Number.parseInt(
+      window.sessionStorage.getItem(`${planStoragePrefix}${item.id}`) ?? "0",
+      10
+    );
+    setSelectedIndex(Number.isInteger(storedIndex) && storedIndex >= 0 && storedIndex < sortedPlanPrices.length ? storedIndex : 0);
+    setHoveredIndex(null);
+  }, [hasMultiplePlans, item.id, sortedPlanPrices.length]);
+
+  function persistSelectedIndex(nextIndex: number) {
+    setSelectedIndex(nextIndex);
+
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(`${planStoragePrefix}${item.id}`, String(nextIndex));
+    }
   }
 
-  return formatCurrency(item.currentPrice, item.currency);
+  const activeIndex = hoveredIndex ?? selectedIndex;
+  const activePrice = sortedPlanPrices[activeIndex] ?? item.currentPrice;
+
+  return (
+    <>
+      <p
+        className={`mt-2 text-2xl font-semibold text-slate-950 transition-all duration-200 ${
+          hoveredIndex !== null ? "translate-x-0.5 text-slate-900" : ""
+        }`}
+      >
+        {formatCurrency(activePrice, item.currency)}
+      </p>
+      {hasMultiplePlans ? (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {sortedPlanPrices.map((price, index) => {
+            const isActive = index === activeIndex;
+            const isSelected = index === selectedIndex;
+
+            return (
+              <button
+                key={`${item.id}-${price}`}
+                type="button"
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onFocus={() => setHoveredIndex(index)}
+                onBlur={() => setHoveredIndex(null)}
+                onClick={() => persistSelectedIndex(index)}
+                className={`rounded-2xl border px-3 py-2 text-xs font-semibold tracking-[0.2em] transition-all duration-200 ${
+                  isActive || isSelected
+                    ? "border-slate-900 bg-slate-900 text-white shadow-[0_10px_24px_rgba(15,23,42,0.16)]"
+                    : "border-slate-200 bg-white text-slate-500 hover:-translate-y-0.5 hover:border-slate-400 hover:text-slate-800"
+                }`}
+                aria-label={`${getPlanLabel(index)} ${formatCurrency(price, item.currency)}`}
+              >
+                {getPlanLabel(index)}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+    </>
+  );
 }
 
 export default function Recommendations() {
@@ -155,9 +232,7 @@ export default function Recommendations() {
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <div className="rounded-[22px] bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{t("recommendations.priceLabel")}</p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-950">
-                    {formatDiscoverPrice(item)}
-                  </p>
+                  <RecommendationPriceSelector item={item} />
                   <p className="mt-2 text-sm text-slate-500">{item.sourceLabel}</p>
                 </div>
                 <div className="rounded-[22px] bg-emerald-50/70 p-4">
