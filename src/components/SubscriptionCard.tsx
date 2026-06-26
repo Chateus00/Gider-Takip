@@ -112,7 +112,7 @@ export default function SubscriptionCard({ item }: SubscriptionCardProps) {
             src={item.logoUrl}
             alt={item.name}
             containerClassName="flex items-center justify-center"
-            className="max-h-16 w-auto max-w-[144px] object-contain md:max-h-24 md:max-w-[168px]"
+            className="h-14 w-auto max-w-[144px] object-contain md:h-20 md:max-w-[168px]"
           />
         </div>
         <Link

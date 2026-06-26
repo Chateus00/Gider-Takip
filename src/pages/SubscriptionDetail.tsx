@@ -96,7 +96,7 @@ export default function SubscriptionDetail() {
               src={item.logoUrl}
               alt={item.name}
               containerClassName="flex min-h-20 min-w-[120px] max-w-[168px] items-center"
-              className="max-h-20 w-auto max-w-[168px] object-contain"
+              className="h-16 w-auto max-w-[168px] object-contain md:h-20"
             />
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{item.category}</p>
