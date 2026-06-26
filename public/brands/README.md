@@ -6,8 +6,8 @@ Beklenen dosya adları:
 - youtube.png
 - icloud.png
 - blutv.svg
-- exxen.svg
-- gain.svg
+- exxen.ico
+- gain.ico
 - bein-connect.ico
 - disneyplus.svg
 - xbox-game-pass.svg

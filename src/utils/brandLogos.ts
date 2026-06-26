@@ -81,11 +81,11 @@ export function getBrandLogoConfig(appName: string, fallbackSrc: string): BrandL
     },
     {
       match: (value) => value === "exxen" || value.startsWith("exxen "),
-      config: { localSrc: "/brands/exxen.svg", fit: "contain" },
+      config: { localSrc: "/brands/exxen.ico", fit: "contain" },
     },
     {
       match: (value) => value === "gain" || value === "gain tv",
-      config: { localSrc: "/brands/gain.svg", fit: "contain" },
+      config: { localSrc: "/brands/gain.ico", fit: "contain" },
     },
     {
       match: (value) => value === "bein connect" || value === "beinconnect" || value.includes("bein connect"),
